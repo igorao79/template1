@@ -1,0 +1,122 @@
+@import '@/styles/variables.scss';
+@import '@/styles/mixins.scss';
+
+.about {
+  padding: $spacing-xl 0;
+  background-color: $white;
+  
+  &__container {
+    @include container;
+  }
+  
+  &__header {
+    text-align: center;
+    max-width: 700px;
+    margin: 0 auto $spacing-xl;
+  }
+  
+  &__subtitle {
+    color: $accent-color;
+    font-weight: 500;
+    margin-bottom: $spacing-sm;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+  }
+  
+  &__title {
+    @include heading-2;
+    margin-bottom: $spacing-md;
+    
+    span {
+      color: $primary-color;
+    }
+  }
+  
+  &__description {
+    color: rgba($text-color, 0.8);
+    font-size: 1.1rem;
+    line-height: 1.6;
+  }
+  
+  &__content {
+    @include flex;
+    gap: $spacing-xl;
+    
+    @include media-md {
+      flex-direction: column;
+    }
+  }
+  
+  &__image {
+    flex: 1;
+    position: relative;
+    border-radius: $border-radius-lg;
+    overflow: hidden;
+    height: 500px;
+    
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    
+    @include media-md {
+      width: 100%;
+      height: 300px;
+    }
+  }
+  
+  &__info {
+    flex: 1;
+    
+    @include media-md {
+      margin-top: $spacing-lg;
+    }
+  }
+  
+  &__features {
+    @include flex;
+    flex-direction: column;
+    gap: $spacing-md;
+  }
+  
+  &__feature {
+    @include flex;
+    gap: $spacing-md;
+    
+    &-icon {
+      @include flex-center;
+      width: 50px;
+      height: 50px;
+      background-color: rgba($primary-color, 0.1);
+      border-radius: $border-radius-circle;
+      color: $primary-color;
+      flex-shrink: 0;
+    }
+    
+    &-content {
+      flex: 1;
+    }
+    
+    &-title {
+      font-family: $font-family-heading;
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin-bottom: $spacing-xs;
+    }
+    
+    &-description {
+      color: rgba($text-color, 0.8);
+      line-height: 1.6;
+    }
+  }
+  
+  &__cta {
+    margin-top: $spacing-lg;
+    
+    a {
+      @include button-primary;
+      display: inline-block;
+    }
+  }
+} 

@@ -1,0 +1,195 @@
+@import '@/styles/variables.scss';
+@import '@/styles/mixins.scss';
+
+.footer {
+  background-color: $text-color;
+  color: $white;
+  padding: $spacing-xl 0;
+  
+  &__container {
+    @include container;
+  }
+  
+  &__top {
+    @include flex-between;
+    padding-bottom: $spacing-lg;
+    border-bottom: 1px solid rgba($white, 0.1);
+    
+    @include media-md {
+      flex-direction: column;
+      gap: $spacing-lg;
+    }
+  }
+  
+  &__logo {
+    @include flex-center;
+    gap: $spacing-xs;
+    
+    &-image {
+      width: 40px;
+      height: 40px;
+    }
+    
+    &-text {
+      font-family: $font-family-heading;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: $white;
+    }
+  }
+  
+  &__social {
+    @include flex-center;
+    gap: $spacing-md;
+    
+    &-link {
+      @include flex-center;
+      width: 40px;
+      height: 40px;
+      border-radius: $border-radius-circle;
+      background-color: rgba($white, 0.1);
+      transition: all $transition-normal;
+      
+      &:hover {
+        background-color: $primary-color;
+        transform: translateY(-3px);
+      }
+    }
+  }
+  
+  &__middle {
+    @include flex;
+    justify-content: space-between;
+    padding: $spacing-lg 0;
+    
+    @include media-md {
+      flex-direction: column;
+      gap: $spacing-lg;
+    }
+  }
+  
+  &__nav {
+    @include flex;
+    gap: $spacing-xl;
+    
+    @include media-sm {
+      flex-direction: column;
+      gap: $spacing-lg;
+    }
+  }
+  
+  &__nav-column {
+    @include flex;
+    flex-direction: column;
+    gap: $spacing-sm;
+  }
+  
+  &__nav-title {
+    font-family: $font-family-heading;
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: $spacing-xs;
+    color: $primary-color;
+  }
+  
+  &__nav-link {
+    color: rgba($white, 0.7);
+    transition: all $transition-normal;
+    font-size: 0.9rem;
+    
+    &:hover {
+      color: $primary-color;
+      transform: translateX(5px);
+    }
+  }
+  
+  &__newsletter {
+    max-width: 400px;
+    
+    @include media-md {
+      max-width: 100%;
+    }
+  }
+  
+  &__newsletter-title {
+    font-family: $font-family-heading;
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: $spacing-xs;
+    color: $primary-color;
+  }
+  
+  &__newsletter-text {
+    color: rgba($white, 0.7);
+    font-size: 0.9rem;
+    margin-bottom: $spacing-md;
+  }
+  
+  &__newsletter-form {
+    @include flex;
+    gap: $spacing-xs;
+    
+    @include media-xs {
+      flex-direction: column;
+    }
+  }
+  
+  &__newsletter-input {
+    flex: 1;
+    padding: $spacing-sm;
+    border-radius: $border-radius;
+    border: 1px solid rgba($white, 0.1);
+    background-color: rgba($white, 0.05);
+    color: $white;
+    
+    &::placeholder {
+      color: rgba($white, 0.5);
+    }
+    
+    &:focus {
+      outline: none;
+      border-color: $primary-color;
+    }
+  }
+  
+  &__newsletter-button {
+    @include button-primary;
+    white-space: nowrap;
+  }
+  
+  &__bottom {
+    @include flex-between;
+    padding-top: $spacing-lg;
+    border-top: 1px solid rgba($white, 0.1);
+    
+    @include media-sm {
+      flex-direction: column;
+      gap: $spacing-md;
+      text-align: center;
+    }
+  }
+  
+  &__copyright {
+    color: rgba($white, 0.7);
+    font-size: 0.9rem;
+  }
+  
+  &__links {
+    @include flex;
+    gap: $spacing-md;
+    
+    @include media-sm {
+      justify-content: center;
+    }
+  }
+  
+  &__link {
+    color: rgba($white, 0.7);
+    font-size: 0.9rem;
+    transition: color $transition-normal;
+    
+    &:hover {
+      color: $primary-color;
+    }
+  }
+} 

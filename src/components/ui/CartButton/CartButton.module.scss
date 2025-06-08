@@ -1,0 +1,42 @@
+@import '@/styles/variables.scss';
+@import '@/styles/mixins.scss';
+
+.cartButton {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: $primary-color;
+  color: $text-color;
+  border: none;
+  cursor: pointer;
+  transition: all $transition-normal;
+  
+  &:hover {
+    background-color: #e6bc4e; /* Немного темнее чем $primary-color (#F5CB5C) */
+    transform: translateY(-2px);
+  }
+  
+  &:active {
+    transform: translateY(0);
+  }
+  
+  &__count {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background-color: $accent-color;
+    color: $white;
+    font-size: 0.7rem;
+    font-weight: bold;
+  }
+} 

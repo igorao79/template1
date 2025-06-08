@@ -1,0 +1,49 @@
+// Colors
+$primary-color: #F5CB5C;
+$secondary-color: #FFFAEB;
+$text-color: #333533;
+$text-color-light: #666666;
+$accent-color: #E8871E;
+$white: #FFFFFF;
+$background-color: #FFFFFF;
+$background-color-light: #F9F9F9;
+$border-color: #E0E0E0;
+
+// Typography
+$font-family-base: 'Poppins', sans-serif;
+$font-family-heading: 'Playfair Display', serif;
+
+// Breakpoints
+$breakpoint-xs: 480px;
+$breakpoint-sm: 768px;
+$breakpoint-md: 992px;
+$breakpoint-lg: 1200px;
+
+// Spacing
+$spacing-xs: 0.5rem;
+$spacing-sm: 1rem;
+$spacing-md: 2rem;
+$spacing-lg: 3rem;
+$spacing-xl: 5rem;
+$spacing-xxl: 8rem;
+
+// Transitions
+$transition-fast: 0.2s ease;
+$transition-normal: 0.3s ease;
+$transition-slow: 0.5s ease;
+
+// Z-index
+$z-index-dropdown: 1000;
+$z-index-sticky: 1020;
+$z-index-fixed: 1030;
+$z-index-modal-backdrop: 1040;
+$z-index-modal: 1050;
+$z-index-popover: 1060;
+$z-index-tooltip: 1070;
+
+// Border radius
+$border-radius-sm: 4px;
+$border-radius: 8px;
+$border-radius-lg: 16px;
+$border-radius-xl: 24px;
+$border-radius-circle: 50%; 
