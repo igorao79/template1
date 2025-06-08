@@ -13,7 +13,7 @@ const processSteps = [
     id: 1,
     title: 'Отбор молока',
     description: 'Мы используем только свежее молоко высшего качества от местных фермеров, которые заботятся о своих животных.',
-    icon: <GiMilkCarton size={32} />,
+    icon: <GiMilkCarton size={48} />,
   },
   {
     id: 2,
@@ -132,7 +132,7 @@ const Process = () => {
               onEnded={handleVideoEnd}
               controls={isPlaying}
             >
-              <source src="/images/making.mp4" type="video/mp4" />
+              <source src="./images/making.mp4" type="video/mp4" />
               Ваш браузер не поддерживает видео.
             </video>
             <button 

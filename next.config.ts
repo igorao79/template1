@@ -15,15 +15,14 @@ const nextConfig: NextConfig = {
   
   // Включаем оптимизацию изображений
   images: {
+    unoptimized: true, // Отключаем оптимизацию изображений для экспорта
     formats: ['image/avif', 'image/webp'],
-    // Включаем оптимизацию изображений в production
     remotePatterns: [
       {
         protocol: 'https',
         hostname: '**',
       },
     ],
-    unoptimized: process.env.NODE_ENV === 'production', // Для GitHub Pages
   },
   
   // Оптимизация для production

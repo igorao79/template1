@@ -2,9 +2,9 @@
 
 import { useReducer, useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FaTimes, FaArrowLeft, FaArrowRight, FaCheck } from 'react-icons/fa';
+import { FaTimes, FaArrowLeft, FaCheck } from 'react-icons/fa';
+import { useCart } from '@/context/CartContext';
 import { DotLottieReact } from '@lottiefiles/dotlottie-react';
-import { useCart, CartItem } from '@/context/CartContext';
 import styles from './Checkout.module.scss';
 
 // Определяем базовый путь для GitHub Pages
@@ -75,22 +75,68 @@ const checkoutReducer = (state: CheckoutState, action: CheckoutAction): Checkout
   }
 };
 
-interface CheckoutProps {
-  isOpen: boolean;
-  onClose: () => void;
-  onBack?: () => void; // Опциональный пропс для возврата к корзине
-}
+// Варианты анимации для шагов
+const variants = {
+  enter: (direction: number) => ({
+    x: direction > 0 ? '100%' : '-100%',
+    opacity: 0,
+  }),
+  center: {
+    x: 0,
+    opacity: 1,
+  },
+  exit: (direction: number) => ({
+    x: direction < 0 ? '100%' : '-100%',
+    opacity: 0,
+  }),
+};
 
-const Checkout = ({ isOpen, onClose, onBack }: CheckoutProps) => {
+const Checkout = () => {
+  const { isCheckoutOpen, closeCheckout, cartItems, totalPrice, clearCart } = useCart();
   const [state, dispatch] = useReducer(checkoutReducer, initialState);
-  const { cartItems, totalPrice, clearCart } = useCart();
-  
+  const [direction, setDirection] = useState(0);
+  const [lottieLoaded, setLottieLoaded] = useState(false);
+  const [lottieData, setLottieData] = useState<ArrayBuffer | null>(null);
+
+  // Закрытие оформления заказа при нажатии Escape
+  useEffect(() => {
+    const handleEscapeKey = (event: KeyboardEvent) => {
+      if (event.key === 'Escape' && isCheckoutOpen) {
+        closeCheckout();
+      }
+    };
+
+    window.addEventListener('keydown', handleEscapeKey);
+    return () => {
+      window.removeEventListener('keydown', handleEscapeKey);
+    };
+  }, [isCheckoutOpen, closeCheckout]);
+
   // Сбрасываем состояние при закрытии
   useEffect(() => {
-    if (!isOpen) {
+    if (!isCheckoutOpen) {
       dispatch({ type: 'RESET' });
+      setLottieLoaded(false);
     }
-  }, [isOpen]);
+  }, [isCheckoutOpen]);
+
+  // Предзагрузка Lottie анимации
+  useEffect(() => {
+    if (isCheckoutOpen) {
+      const preloadLottie = async () => {
+        try {
+          const response = await fetch(`${basePath}/images/cheeseform.lottie`);
+          if (!response.ok) throw new Error('Failed to load animation');
+          const data = await response.arrayBuffer();
+          setLottieData(data);
+        } catch (error) {
+          console.error('Error preloading Lottie animation:', error);
+        }
+      };
+      
+      preloadLottie();
+    }
+  }, [isCheckoutOpen]);
 
   // Проверка валидности формы для текущего шага
   const isStepValid = () => {
@@ -103,6 +149,12 @@ const Checkout = ({ isOpen, onClose, onBack }: CheckoutProps) => {
         formData.email.trim() !== '' &&
         formData.phone.trim() !== ''
       );
+    } else if (step === 2) {
+      // Проверка обязательных полей на втором шаге
+      return (
+        formData.address.trim() !== '' &&
+        formData.paymentMethod !== ''
+      );
     }
     
     return true;
@@ -114,131 +166,142 @@ const Checkout = ({ isOpen, onClose, onBack }: CheckoutProps) => {
     dispatch({ type: 'UPDATE_FIELD', field: name, value });
   };
 
-  // Обработчик перехода к предыдущему шагу (возврат в корзину)
-  const handlePrevStep = () => {
-    if (onBack) {
-      onBack();
-    } else {
-      onClose();
+  // Обработчик перехода к следующему шагу
+  const handleNextStep = () => {
+    if (isStepValid()) {
+      if (state.step === 2) {
+        // Если это последний шаг, завершаем заказ
+        handleCompleteOrder();
+      } else {
+        setDirection(1); // Устанавливаем направление анимации вперед
+        dispatch({ type: 'NEXT_STEP' });
+      }
     }
   };
 
+  // Обработчик перехода к предыдущему шагу
+  const handlePrevStep = () => {
+    setDirection(-1); // Устанавливаем направление анимации назад
+    dispatch({ type: 'PREV_STEP' });
+  };
+  
   // Обработчик завершения заказа
   const handleCompleteOrder = () => {
     dispatch({ type: 'COMPLETE_ORDER' });
+    
     // Очищаем корзину
     clearCart();
+    
+    // Автоматически закрываем модальное окно через некоторое время
+    setTimeout(() => {
+      closeCheckout();
+    }, 5000);
   };
 
-  // Обработчик закрытия с сбросом состояния
-  const handleClose = () => {
-    onClose();
+  // Обработчик загрузки Lottie анимации
+  const handleLottieLoad = () => {
+    setLottieLoaded(true);
   };
 
-  // Варианты анимации для свайпа между шагами
-  const slideVariants = {
-    enter: (direction: number) => ({
-      x: direction > 0 ? '100%' : '-100%',
-      opacity: 0,
-    }),
-    center: {
-      x: 0,
-      opacity: 1,
-    },
-    exit: (direction: number) => ({
-      x: direction < 0 ? '100%' : '-100%',
-      opacity: 0,
-    }),
-  };
+  if (!isCheckoutOpen) return null;
 
   return (
-    <AnimatePresence>
-      {isOpen && (
-        <motion.div 
-          className={styles.checkout__overlay}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          onClick={handleClose}
-        >
-          <motion.div 
-            className={styles.checkout__modal}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 20 }}
-            transition={{ duration: 0.2 }}
-            onClick={e => e.stopPropagation()}
-          >
-            <button 
-              className={styles.checkout__close} 
-              onClick={handleClose}
-              aria-label="Закрыть"
-            >
-              <FaTimes size={18} />
-            </button>
-
-            {/* Заголовок модального окна */}
-            <div className={styles.checkout__header}>
-              <h3 className={styles.checkout__title}>
-                {state.isCompleted 
-                  ? 'Заказ оформлен' 
-                  : 'Оформление заказа'}
-              </h3>
-              
-              {/* Индикатор шагов */}
-              {!state.isCompleted && (
-                <div className={styles.checkout__steps}>
-                  <div className={`${styles.checkout__step} ${styles.active}`}>1</div>
-                  <div className={styles.checkout__step_line}></div>
-                  <div className={`${styles.checkout__step} ${state.step >= 2 ? styles.active : ''}`}>2</div>
-                  <div className={styles.checkout__step_line}></div>
-                  <div className={`${styles.checkout__step} ${state.isCompleted ? styles.active : ''}`}>3</div>
-                </div>
-              )}
+    <div className={styles.checkout__overlay} onClick={closeCheckout}>
+      <motion.div 
+        className={styles.checkout__modal}
+        onClick={e => e.stopPropagation()}
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: 20 }}
+        transition={{ duration: 0.3 }}
+      >
+        <div className={styles.checkout__header}>
+          <h3 className={styles.checkout__title}>
+            {state.isCompleted ? 'Заказ оформлен' : 'Оформление заказа'}
+          </h3>
+          
+          {!state.isCompleted && (
+            <div className={styles.checkout__steps}>
+              <div className={`${styles.checkout__step} ${styles.active}`}>1</div>
+              <div className={styles.checkout__step_line}></div>
+              <div className={`${styles.checkout__step} ${state.step >= 2 ? styles.active : ''}`}>2</div>
             </div>
-
-            {/* Содержимое в зависимости от шага */}
-            <div className={styles.checkout__content}>
-              <AnimatePresence mode="wait" initial={false} custom={state.step}>
-                {state.isCompleted ? (
-                  // Шаг 3: Заказ успешно оформлен
+          )}
+          
+          <button 
+            className={styles.checkout__close}
+            onClick={closeCheckout}
+            aria-label="Закрыть оформление заказа"
+          >
+            <FaTimes size={18} />
+          </button>
+        </div>
+        
+        <div className={styles.checkout__content}>
+          {state.isCompleted ? (
+            <motion.div 
+              className={styles.checkout__success}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.5 }}
+            >
+              <motion.div 
+                className={styles.checkout__success_icon}
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                transition={{ delay: 0.2, type: "spring" }}
+              >
+                <FaCheck size={40} />
+              </motion.div>
+              
+              <motion.div 
+                className={styles.checkout__animation}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.3, delay: 0.4 }}
+              >
+                <DotLottieReact
+                  src={`${basePath}/images/cheeseform.lottie`}
+                  autoplay
+                  loop
+                  onLoad={handleLottieLoad}
+                />
+              </motion.div>
+              
+              <motion.h4 
+                className={styles.checkout__success_title}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.3 }}
+              >
+                Спасибо за заказ!
+              </motion.h4>
+              
+              <motion.p 
+                className={styles.checkout__success_message}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.4 }}
+              >
+                Мы свяжемся с вами в ближайшее время для подтверждения.
+              </motion.p>
+            </motion.div>
+          ) : (
+            <>
+              <AnimatePresence initial={false} mode="wait" custom={direction}>
+                {state.step === 1 && (
                   <motion.div 
-                    key="completed"
-                    className={styles.checkout__completed}
-                    custom={state.step}
-                    variants={slideVariants}
-                    initial="enter"
-                    animate="center"
-                    exit="exit"
-                    transition={{ duration: 0.3 }}
-                  >
-                    <div className={styles.checkout__success_icon}>
-                      <FaCheck size={40} />
-                    </div>
-                    <h4 className={styles.checkout__success_title}>Спасибо за покупку!</h4>
-                    <p className={styles.checkout__success_message}>
-                      Мы уже везем ваш сыр :)
-                    </p>
-                    <div className={styles.checkout__animation}>
-                      <DotLottieReact
-                        src={`${basePath}/images/cheeseform.lottie`}
-                        autoplay
-                        loop
-                      />
-                    </div>
-                  </motion.div>
-                ) : (
-                  // Шаг 1: Ввод контактной информации
-                  <motion.div 
-                    key="contact"
+                    key="step1"
                     className={styles.checkout__form}
-                    custom={state.step}
-                    variants={slideVariants}
+                    custom={direction}
+                    variants={variants}
                     initial="enter"
                     animate="center"
                     exit="exit"
-                    transition={{ duration: 0.2 }}
+                    transition={{ type: "tween", duration: 0.3 }}
                   >
+                    <h4 className={styles.checkout__step_title}>Контактная информация</h4>
+                    
                     <div className={styles.checkout__form_group}>
                       <label htmlFor="name" className={styles.checkout__form_label}>Имя*</label>
                       <input
@@ -253,38 +316,51 @@ const Checkout = ({ isOpen, onClose, onBack }: CheckoutProps) => {
                       />
                     </div>
                     
-                    <div className={styles.checkout__form_row}>
-                      <div className={styles.checkout__form_group}>
-                        <label htmlFor="email" className={styles.checkout__form_label}>Email*</label>
-                        <input
-                          type="email"
-                          id="email"
-                          name="email"
-                          value={state.formData.email}
-                          onChange={handleChange}
-                          className={styles.checkout__form_input}
-                          required
-                          placeholder="Ваш email"
-                        />
-                      </div>
-                      
-                      <div className={styles.checkout__form_group}>
-                        <label htmlFor="phone" className={styles.checkout__form_label}>Телефон*</label>
-                        <input
-                          type="tel"
-                          id="phone"
-                          name="phone"
-                          value={state.formData.phone}
-                          onChange={handleChange}
-                          className={styles.checkout__form_input}
-                          required
-                          placeholder="Ваш телефон"
-                        />
-                      </div>
+                    <div className={styles.checkout__form_group}>
+                      <label htmlFor="email" className={styles.checkout__form_label}>Email*</label>
+                      <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        value={state.formData.email}
+                        onChange={handleChange}
+                        className={styles.checkout__form_input}
+                        required
+                        placeholder="Ваш email"
+                      />
                     </div>
                     
                     <div className={styles.checkout__form_group}>
-                      <label htmlFor="address" className={styles.checkout__form_label}>Адрес</label>
+                      <label htmlFor="phone" className={styles.checkout__form_label}>Телефон*</label>
+                      <input
+                        type="tel"
+                        id="phone"
+                        name="phone"
+                        value={state.formData.phone}
+                        onChange={handleChange}
+                        className={styles.checkout__form_input}
+                        required
+                        placeholder="+7 (___) ___-__-__"
+                      />
+                    </div>
+                  </motion.div>
+                )}
+                
+                {state.step === 2 && (
+                  <motion.div 
+                    key="step2"
+                    className={styles.checkout__form}
+                    custom={direction}
+                    variants={variants}
+                    initial="enter"
+                    animate="center"
+                    exit="exit"
+                    transition={{ type: "tween", duration: 0.3 }}
+                  >
+                    <h4 className={styles.checkout__step_title}>Адрес доставки</h4>
+                    
+                    <div className={styles.checkout__form_group}>
+                      <label htmlFor="address" className={styles.checkout__form_label}>Адрес*</label>
                       <input
                         type="text"
                         id="address"
@@ -292,6 +368,7 @@ const Checkout = ({ isOpen, onClose, onBack }: CheckoutProps) => {
                         value={state.formData.address}
                         onChange={handleChange}
                         className={styles.checkout__form_input}
+                        required
                         placeholder="Адрес доставки"
                       />
                     </div>
@@ -325,13 +402,14 @@ const Checkout = ({ isOpen, onClose, onBack }: CheckoutProps) => {
                     </div>
                     
                     <div className={styles.checkout__form_group}>
-                      <label htmlFor="paymentMethod" className={styles.checkout__form_label}>Способ оплаты</label>
+                      <label htmlFor="paymentMethod" className={styles.checkout__form_label}>Способ оплаты*</label>
                       <select
                         id="paymentMethod"
                         name="paymentMethod"
                         value={state.formData.paymentMethod}
                         onChange={handleChange}
                         className={styles.checkout__form_select}
+                        required
                       >
                         <option value="">Выберите способ оплаты</option>
                         <option value="card">Банковская карта</option>
@@ -357,42 +435,34 @@ const Checkout = ({ isOpen, onClose, onBack }: CheckoutProps) => {
                   </motion.div>
                 )}
               </AnimatePresence>
-            </div>
-
-            {/* Кнопки навигации */}
-            <div className={styles.checkout__actions}>
-              {state.isCompleted ? (
-                <button 
-                  className={styles.checkout__button_primary} 
-                  onClick={handleClose}
-                >
-                  Закрыть
-                </button>
-              ) : (
-                <>
-                  <button 
+              
+              <div className={styles.checkout__actions}>
+                {state.step > 1 && (
+                  <motion.button 
                     className={styles.checkout__button_secondary} 
                     onClick={handlePrevStep}
+                    whileTap={{ scale: 0.95 }}
                   >
                     <FaArrowLeft size={14} />
                     Назад
-                  </button>
-                  
-                  <button 
-                    className={styles.checkout__button_primary} 
-                    onClick={handleCompleteOrder}
-                    disabled={!isStepValid()}
-                  >
-                    Оформить заказ
-                  </button>
-                </>
-              )}
-            </div>
-          </motion.div>
-        </motion.div>
-      )}
-    </AnimatePresence>
+                  </motion.button>
+                )}
+                
+                <motion.button 
+                  className={styles.checkout__button_primary} 
+                  onClick={handleNextStep}
+                  disabled={!isStepValid()}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  {state.step === 2 ? 'Оформить заказ' : 'Продолжить'}
+                </motion.button>
+              </div>
+            </>
+          )}
+        </div>
+      </motion.div>
+    </div>
   );
 };
 
-export default Checkout; 
+export default Checkout;

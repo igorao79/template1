@@ -1,60 +1,54 @@
 "use client";
 
-import React, { createContext, useState, useContext, useEffect, ReactNode, useRef, useCallback } from 'react';
+import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 
 interface AnimationContextType {
   loaderHidden: boolean;
-  observedElements: Map<string, boolean>;
-  registerIntersection: (id: string, isInView: boolean) => void;
+  sectionsInView: Record<string, boolean>;
+  registerIntersection: (sectionId: string, inView: boolean) => void;
 }
 
-const AnimationContext = createContext<AnimationContextType>({
-  loaderHidden: false,
-  observedElements: new Map(),
-  registerIntersection: () => {},
-});
-
-export const useAnimation = () => useContext(AnimationContext);
+const AnimationContext = createContext<AnimationContextType | undefined>(undefined);
 
 export const AnimationProvider = ({ children }: { children: ReactNode }) => {
   const [loaderHidden, setLoaderHidden] = useState(false);
-  // Используем useRef вместо useState для хранения состояния видимости элементов
-  // чтобы избежать бесконечного цикла обновлений
-  const observedElementsRef = useRef<Map<string, boolean>>(new Map());
-  
-  // Мемоизируем функцию регистрации видимости, чтобы она не менялась при каждом рендере
-  const registerIntersection = useCallback((id: string, isInView: boolean) => {
-    observedElementsRef.current.set(id, isInView);
+  const [sectionsInView, setSectionsInView] = useState<Record<string, boolean>>({});
+
+  // Скрываем лоадер после загрузки страницы
+  useEffect(() => {
+    // Сокращаем время ожидания для лоадера
+    const timer = setTimeout(() => {
+      setLoaderHidden(true);
+    }, 1500); // Уменьшаем время до 1.5 секунд для лучшего UX
+
+    return () => clearTimeout(timer);
   }, []);
 
-  useEffect(() => {
-    // Слушаем событие скрытия загрузчика
-    const handleLoaderHidden = () => {
-      setLoaderHidden(true);
-    };
-    
-    window.addEventListener('loader-hidden', handleLoaderHidden);
-    
-    // Если событие не сработает, включаем анимации через таймаут
-    const timeout = setTimeout(() => {
-      setLoaderHidden(true);
-    }, 4000); // Чуть больше, чем таймаут загрузчика
-    
-    return () => {
-      window.removeEventListener('loader-hidden', handleLoaderHidden);
-      clearTimeout(timeout);
-    };
-  }, []);
+  // Функция для регистрации видимости секций
+  const registerIntersection = (sectionId: string, inView: boolean) => {
+    setSectionsInView(prev => ({
+      ...prev,
+      [sectionId]: inView
+    }));
+  };
 
   return (
-    <AnimationContext.Provider value={{ 
-      loaderHidden, 
-      observedElements: observedElementsRef.current, 
-      registerIntersection 
-    }}>
+    <AnimationContext.Provider 
+      value={{ 
+        loaderHidden, 
+        sectionsInView,
+        registerIntersection
+      }}
+    >
       {children}
     </AnimationContext.Provider>
   );
 };
 
-export default AnimationContext; 
+export const useAnimation = () => {
+  const context = useContext(AnimationContext);
+  if (context === undefined) {
+    throw new Error('useAnimation must be used within an AnimationProvider');
+  }
+  return context;
+}; 

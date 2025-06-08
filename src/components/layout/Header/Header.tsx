@@ -1,11 +1,11 @@
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import styles from './Header.module.scss';
 import { FaCheese, FaTimes, FaBars } from 'react-icons/fa';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import CartButton from '@/components/ui/CartButton';
 import Image from 'next/image';
 
@@ -14,6 +14,7 @@ const Header = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState('home');
   const pathname = usePathname();
+  const router = useRouter();
 
   useEffect(() => {
     // Проверяем начальное положение скролла при загрузке страницы
@@ -35,6 +36,13 @@ const Header = () => {
       });
       
       setActiveSection(currentSection);
+      
+      // Обновляем URL с якорем текущего раздела, если он отличается от текущего
+      if (currentSection !== 'home' && window.location.hash !== `#${currentSection}`) {
+        window.history.replaceState(null, '', `#${currentSection}`);
+      } else if (currentSection === 'home' && window.location.hash !== '') {
+        window.history.replaceState(null, '', window.location.pathname);
+      }
     };
     
     // Вызываем функцию определения активного раздела сразу после загрузки
@@ -52,6 +60,45 @@ const Header = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  // Проверяем хеш в URL при загрузке страницы
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const hash = window.location.hash.replace('#', '');
+      if (hash) {
+        const targetElement = document.getElementById(hash);
+        if (targetElement) {
+          targetElement.scrollIntoView({ behavior: 'smooth' });
+          setActiveSection(hash);
+        }
+      }
+    }
+  }, []);
+
+  const handleNavLinkClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    e.preventDefault();
+    const targetId = href.replace('#', '');
+    
+    // Если цель - home, обновляем URL без хеша
+    if (targetId === 'home' || targetId === '') {
+      window.history.pushState(null, '', window.location.pathname);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      setActiveSection('home');
+    } else {
+      // Иначе скроллим к нужному разделу и обновляем URL с хешем
+      const targetElement = document.getElementById(targetId);
+      if (targetElement) {
+        window.history.pushState(null, '', `#${targetId}`);
+        targetElement.scrollIntoView({ behavior: 'smooth' });
+        setActiveSection(targetId);
+      }
+    }
+    
+    // Закрываем мобильное меню если оно открыто
+    if (isMobileMenuOpen) {
+      setIsMobileMenuOpen(false);
+    }
+  };
+
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
   };
@@ -61,17 +108,21 @@ const Header = () => {
   };
 
   const navLinks = [
-    { href: '/', label: 'Главная' },
-    { href: '#about', label: 'О нас' },
-    { href: '#products', label: 'Наши сыры' },
-    { href: '#process', label: 'Процесс' },
-    { href: '#contact', label: 'Контакты' },
+    { href: '#home', id: 'home', label: 'Главная' },
+    { href: '#about', id: 'about', label: 'О нас' },
+    { href: '#products', id: 'products', label: 'Наши сыры' },
+    { href: '#process', id: 'process', label: 'Процесс' },
+    { href: '#contact', id: 'contact', label: 'Контакты' },
   ];
 
   return (
     <header className={`${styles.header} ${isScrolled ? styles['header--scrolled'] : ''}`}>
       <div className={`container ${styles.header__container}`}>
-        <Link href="/" className={styles.header__logo}>
+        <a 
+          href="#home"
+          className={styles.header__logo}
+          onClick={(e) => handleNavLinkClick(e, '#home')}
+        >
           <motion.div 
             className={styles['header__logo-image']}
             initial={{ rotate: 0 }}
@@ -81,39 +132,19 @@ const Header = () => {
             <FaCheese size={32} color="#F5CB5C" />
           </motion.div>
           <span className={styles['header__logo-text']}>СырАрт</span>
-        </Link>
+        </a>
 
         <nav className={styles.header__nav}>
-          <Link 
-            href="#home" 
-            className={`${styles.header__link} ${isActive('home') ? styles['header__link--active'] : ''}`}
-          >
-            Главная
-          </Link>
-          <Link 
-            href="#about" 
-            className={`${styles.header__link} ${isActive('about') ? styles['header__link--active'] : ''}`}
-          >
-            О нас
-          </Link>
-          <Link 
-            href="#products" 
-            className={`${styles.header__link} ${isActive('products') ? styles['header__link--active'] : ''}`}
-          >
-            Продукты
-          </Link>
-          <Link 
-            href="#process" 
-            className={`${styles.header__link} ${isActive('process') ? styles['header__link--active'] : ''}`}
-          >
-            Процесс
-          </Link>
-          <Link 
-            href="#contact" 
-            className={`${styles.header__link} ${isActive('contact') ? styles['header__link--active'] : ''}`}
-          >
-            Контакты
-          </Link>
+          {navLinks.map((link) => (
+            <a 
+              key={link.id}
+              href={link.href} 
+              className={`${styles.header__link} ${isActive(link.id) ? styles['header__link--active'] : ''}`}
+              onClick={(e) => handleNavLinkClick(e, link.href)}
+            >
+              {link.label}
+            </a>
+          ))}
         </nav>
 
         <div className={styles.header__actions}>
@@ -121,9 +152,13 @@ const Header = () => {
             <CartButton />
           </div>
           
-          <Link href="#contact" className={`${styles.header__cta} ${styles.header__cta_desktop}`}>
+          <a 
+            href="#contact" 
+            className={`${styles.header__cta} ${styles.header__cta_desktop}`}
+            onClick={(e) => handleNavLinkClick(e, '#contact')}
+          >
             Заказать сейчас
-          </Link>
+          </a>
           
           <button 
             className={styles.header__mobile_button}
@@ -145,41 +180,16 @@ const Header = () => {
         </button>
 
         <nav className={styles['mobile-menu__nav']}>
-          <Link 
-            href="#home" 
-            className={`${styles['mobile-menu__link']} ${isActive('home') ? styles['mobile-menu__link--active'] : ''}`}
-            onClick={toggleMobileMenu}
-          >
-            Главная
-          </Link>
-          <Link 
-            href="#about" 
-            className={`${styles['mobile-menu__link']} ${isActive('about') ? styles['mobile-menu__link--active'] : ''}`}
-            onClick={toggleMobileMenu}
-          >
-            О нас
-          </Link>
-          <Link 
-            href="#products" 
-            className={`${styles['mobile-menu__link']} ${isActive('products') ? styles['mobile-menu__link--active'] : ''}`}
-            onClick={toggleMobileMenu}
-          >
-            Продукты
-          </Link>
-          <Link 
-            href="#process" 
-            className={`${styles['mobile-menu__link']} ${isActive('process') ? styles['mobile-menu__link--active'] : ''}`}
-            onClick={toggleMobileMenu}
-          >
-            Процесс
-          </Link>
-          <Link 
-            href="#contact" 
-            className={`${styles['mobile-menu__link']} ${isActive('contact') ? styles['mobile-menu__link--active'] : ''}`}
-            onClick={toggleMobileMenu}
-          >
-            Контакты
-          </Link>
+          {navLinks.map((link) => (
+            <a 
+              key={link.id}
+              href={link.href} 
+              className={`${styles['mobile-menu__link']} ${isActive(link.id) ? styles['mobile-menu__link--active'] : ''}`}
+              onClick={(e) => handleNavLinkClick(e, link.href)}
+            >
+              {link.label}
+            </a>
+          ))}
         </nav>
 
         <div className={styles['mobile-menu__cart']}>

@@ -8,7 +8,7 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: rgba($text-color, 0.7);
+    background-color: rgba($text-color, 0.5);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -16,8 +16,8 @@
     padding: $spacing-md;
     
     @include media-sm {
-      padding: $spacing-sm;
       align-items: flex-end;
+      padding: 0;
     }
   }
   
@@ -25,13 +25,13 @@
     background-color: $white;
     border-radius: $border-radius;
     width: 100%;
-    max-width: 600px;
+    max-width: 500px;
     max-height: 90vh;
-    overflow-y: auto;
-    position: relative;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
     display: flex;
     flex-direction: column;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+    position: relative;
     
     @include media-sm {
       max-width: 100%;
@@ -40,16 +40,71 @@
     }
   }
   
-  &__close {
+  &__header {
+    padding: $spacing-md;
+    border-bottom: 1px solid $border-color;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    // position: relative;
+  }
+  
+  &__title {
+    font-family: $font-family-heading;
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin: 0;
+    flex: 1;
+    text-align: center;
+  }
+  
+  &__steps {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     position: absolute;
-    top: $spacing-sm;
-    right: $spacing-sm;
+    left: 50%;
+    bottom: 10%;
+    transform: translate(-50%, -50%);
+    z-index: 5;
+    width: 150px;
+  }
+  
+  &__step {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: $background-color;
+    color: $text-color-light;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    font-weight: 600;
+    border: 2px solid $border-color;
+    transition: all $transition-normal;
+    
+    &.active {
+      background-color: $primary-color;
+      color: $text-color;
+      border-color: $primary-color;
+    }
+  }
+  
+  &__step_line {
+    width: 40px;
+    height: 2px;
+    background-color: $border-color;
+    margin: 0 -5px;
+    z-index: 1;
+  }
+  
+  &__close {
     background: none;
     border: none;
     color: $text-color-light;
     cursor: pointer;
-    width: 32px;
-    height: 32px;
+    padding: 8px;
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -63,259 +118,170 @@
     }
   }
   
-  &__header {
-    padding: $spacing-md;
-    border-bottom: 1px solid $border-color;
-    text-align: center;
-  }
-  
-  &__title {
-    font-size: 1.8rem;
-    font-weight: 600;
-    margin-bottom: $spacing-sm;
-    color: $text-color;
-    font-family: $font-family-heading;
-  }
-  
-  &__steps {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-top: $spacing-sm;
-  }
-  
-  &__step {
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    background-color: $background-color-light;
+  &__back {
+    background: none;
+    border: none;
     color: $text-color-light;
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-weight: 600;
-    border: 2px solid $border-color;
+    transition: all $transition-normal;
     
-    &.active {
-      background-color: $primary-color;
+    &:hover {
+      background-color: rgba($text-color, 0.1);
       color: $text-color;
-      border-color: $primary-color;
     }
-  }
-  
-  &__step_line {
-    width: 60px;
-    height: 2px;
-    background-color: $border-color;
-    margin: 0 $spacing-xs;
   }
   
   &__content {
     padding: $spacing-md;
+    overflow: hidden;
     flex: 1;
-    overflow-y: auto;
     position: relative;
-    min-height: 300px;
-    
-    @include media-sm {
-      padding: $spacing-sm;
-    }
   }
   
-  &__subtitle {
-    font-size: 1.4rem;
-    font-weight: 500;
-    margin-bottom: $spacing-md;
-    color: $text-color;
-  }
-  
-  // Стили для списка товаров (Шаг 1)
-  &__cart {
-    width: 100%;
-  }
-  
-  &__items {
-    list-style: none;
-    padding: 0;
-    margin: 0 0 $spacing-md;
-  }
-  
-  &__item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: $spacing-sm 0;
-    border-bottom: 1px solid $border-color;
-    
-    &:last-child {
-      border-bottom: none;
-    }
-  }
-  
-  &__item_info {
-    display: flex;
-    align-items: center;
-  }
-  
-  &__item_name {
-    font-weight: 500;
-    margin-right: $spacing-sm;
-  }
-  
-  &__item_quantity {
-    color: $text-color-light;
-    font-size: 0.9rem;
-  }
-  
-  &__item_price {
-    font-weight: 600;
-  }
-  
-  &__total {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: $spacing-sm 0;
-    border-top: 2px solid $border-color;
-    font-weight: 600;
-    font-size: 1.2rem;
-  }
-  
-  // Стили для формы (Шаг 2)
   &__form {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-md;
     width: 100%;
+    position: relative;
+    overflow-y: auto;
+    height: 100%;
+    padding-bottom: 70px; /* Оставляем место для кнопок */
+  }
+  
+  &__step_title {
+    font-family: $font-family-heading;
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin: 0 0 $spacing-sm;
   }
   
   &__form_group {
-    margin-bottom: $spacing-md;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
   }
   
   &__form_row {
     display: flex;
     gap: $spacing-md;
     
-    @include media-sm {
-      flex-direction: column;
-      gap: $spacing-sm;
-    }
-    
     .checkout__form_group {
       flex: 1;
+    }
+    
+    @include media-sm {
+      flex-direction: column;
     }
   }
   
   &__form_label {
-    display: block;
-    margin-bottom: $spacing-xs;
     font-weight: 500;
-    color: $text-color;
+    font-size: 0.9rem;
   }
   
-  &__form_input,
-  &__form_select {
-    width: 100%;
-    padding: $spacing-sm;
+  &__form_input {
+    padding: 10px 12px;
     border: 1px solid $border-color;
     border-radius: $border-radius-sm;
     font-size: 1rem;
-    transition: all $transition-normal;
+    transition: border-color $transition-normal;
     
     &:focus {
       border-color: $primary-color;
       outline: none;
-      box-shadow: 0 0 0 2px rgba($primary-color, 0.2);
     }
     
     &::placeholder {
-      color: rgba($text-color-light, 0.7);
+      color: rgba($text-color, 0.5);
+    }
+  }
+  
+  &__form_select {
+    padding: 10px 12px;
+    border: 1px solid $border-color;
+    border-radius: $border-radius-sm;
+    font-size: 1rem;
+    transition: border-color $transition-normal;
+    background-color: $white;
+    
+    &:focus {
+      border-color: $primary-color;
+      outline: none;
+    }
+  }
+  
+  &__form_group_checkbox {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: $spacing-sm;
+    
+    input {
+      width: 18px;
+      height: 18px;
+    }
+    
+    label {
+      font-size: 0.9rem;
+      
+      a {
+        color: $primary-color;
+        text-decoration: none;
+        
+        &:hover {
+          text-decoration: underline;
+        }
+      }
     }
   }
   
   &__summary {
     margin-top: $spacing-md;
-    padding: $spacing-sm;
-    background-color: $background-color-light;
-    border-radius: $border-radius-sm;
+    border-top: 1px solid $border-color;
+    padding-top: $spacing-md;
   }
   
   &__summary_title {
+    font-family: $font-family-heading;
     font-size: 1.1rem;
     font-weight: 600;
-    margin-bottom: $spacing-sm;
+    margin: 0 0 $spacing-sm;
   }
   
   &__summary_items {
-    margin-bottom: $spacing-sm;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: $spacing-md;
   }
   
   &__summary_item {
     display: flex;
     justify-content: space-between;
-    margin-bottom: $spacing-xs;
-    font-size: 0.9rem;
-    
-    &:last-child {
-      margin-bottom: 0;
-    }
+    font-size: 0.95rem;
   }
   
   &__summary_total {
     display: flex;
     justify-content: space-between;
-    padding-top: $spacing-xs;
-    border-top: 1px solid $border-color;
     font-weight: 600;
-  }
-  
-  // Стили для успешного оформления (Шаг 3)
-  &__completed {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    padding: $spacing-md 0;
-  }
-  
-  &__success_icon {
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
-    background-color: #4CAF50;
-    color: $white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: $spacing-md;
-  }
-  
-  &__success_title {
-    font-size: 1.8rem;
-    font-weight: 600;
-    margin-bottom: $spacing-sm;
-    color: $text-color;
-  }
-  
-  &__success_message {
     font-size: 1.1rem;
-    color: $text-color-light;
-    margin-bottom: $spacing-md;
-  }
-  
-  &__animation {
-    margin-top: $spacing-md;
-  }
-  
-  // Стили для кнопок навигации
-  &__actions {
-    padding: $spacing-md;
     border-top: 1px solid $border-color;
+    padding-top: $spacing-sm;
+    margin-top: $spacing-sm;
+  }
+  
+  &__actions {
     display: flex;
     justify-content: space-between;
-    
-    @include media-sm {
-      padding: $spacing-sm;
-    }
+    margin-top: $spacing-md;
+    gap: $spacing-md;
   }
   
   &__button_primary {
@@ -323,22 +289,19 @@
     background-color: $primary-color;
     color: $text-color;
     border: none;
-    border-radius: $border-radius-sm;
+    border-radius: $border-radius;
     font-weight: 600;
     cursor: pointer;
-    display: flex;
-    align-items: center;
-    gap: $spacing-xs;
     transition: all $transition-normal;
+    flex: 1;
     
     &:hover {
-      background-color: #e6bc4e;
+      background-color: darken($primary-color, 5%);
       transform: translateY(-2px);
     }
     
     &:disabled {
       background-color: $border-color;
-      color: $text-color-light;
       cursor: not-allowed;
       transform: none;
     }
@@ -346,19 +309,60 @@
   
   &__button_secondary {
     padding: $spacing-sm $spacing-md;
-    background-color: transparent;
+    background-color: $background-color;
     color: $text-color;
     border: 1px solid $border-color;
-    border-radius: $border-radius-sm;
+    border-radius: $border-radius;
     font-weight: 500;
     cursor: pointer;
+    transition: all $transition-normal;
     display: flex;
     align-items: center;
-    gap: $spacing-xs;
-    transition: all $transition-normal;
+    gap: 8px;
     
     &:hover {
-      background-color: $background-color-light;
+      background-color: darken($background-color, 5%);
     }
   }
-} 
+  
+  &__success {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: $spacing-lg 0;
+  }
+  
+  &__success_icon {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    background-color: rgba($primary-color, 0.2);
+    color: $primary-color;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: $spacing-md;
+  }
+  
+  &__success_title {
+    font-family: $font-family-heading;
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin: 0 0 $spacing-sm;
+  }
+  
+  &__success_message {
+    color: rgba($text-color, 0.8);
+    font-size: 1.1rem;
+    max-width: 300px;
+    margin: 0 auto;
+  }
+  
+  &__animation {
+    width: 150px;
+    height: 150px;
+    margin-bottom: $spacing-md;
+  }
+}

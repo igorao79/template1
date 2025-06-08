@@ -7,11 +7,18 @@ import styles from './CartButton.module.scss';
 const CartButton = () => {
   const { openCart, totalItems } = useCart();
 
+  const handleClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    openCart();
+  };
+
   return (
     <button 
       className={styles.cartButton} 
-      onClick={openCart}
+      onClick={handleClick}
       aria-label="Открыть корзину"
+      type="button"
     >
       <FaShoppingCart size={20} />
       {totalItems > 0 && (

@@ -14,9 +14,12 @@ export interface CartItem {
 // Определяем тип для контекста корзины
 interface CartContextType {
   cartItems: CartItem[];
-  isOpen: boolean;
+  isCartOpen: boolean;
+  isCheckoutOpen: boolean;
   openCart: () => void;
   closeCart: () => void;
+  openCheckout: () => void;
+  closeCheckout: () => void;
   addToCart: (item: CartItem) => void;
   removeFromCart: (id: string) => void;
   updateQuantity: (id: string, quantity: number) => void;
@@ -28,9 +31,12 @@ interface CartContextType {
 // Создаем контекст с начальными значениями
 const CartContext = createContext<CartContextType>({
   cartItems: [],
-  isOpen: false,
+  isCartOpen: false,
+  isCheckoutOpen: false,
   openCart: () => {},
   closeCart: () => {},
+  openCheckout: () => {},
+  closeCheckout: () => {},
   addToCart: () => {},
   removeFromCart: () => {},
   updateQuantity: () => {},
@@ -45,7 +51,8 @@ export const useCart = () => useContext(CartContext);
 // Провайдер контекста корзины
 export const CartProvider = ({ children }: { children: ReactNode }) => {
   const [cartItems, setCartItems] = useState<CartItem[]>([]);
-  const [isOpen, setIsOpen] = useState(false);
+  const [isCartOpen, setIsCartOpen] = useState(false);
+  const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
 
   // Загружаем корзину из localStorage при инициализации
   useEffect(() => {
@@ -63,7 +70,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
 
   // Сохраняем корзину в localStorage при изменении
   useEffect(() => {
-    if (typeof window !== 'undefined' && cartItems.length > 0) {
+    if (typeof window !== 'undefined') {
       localStorage.setItem('cart', JSON.stringify(cartItems));
     }
   }, [cartItems]);
@@ -87,12 +94,44 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
 
   // Функция открытия корзины
   const openCart = useCallback(() => {
-    setIsOpen(true);
+    setIsCartOpen(true);
+    setIsCheckoutOpen(false); // Убедимся, что оформление заказа закрыто
+    
+    // Добавляем класс для блокировки прокрутки страницы
+    if (typeof document !== 'undefined') {
+      document.body.style.overflow = 'hidden';
+    }
   }, []);
 
   // Функция закрытия корзины
   const closeCart = useCallback(() => {
-    setIsOpen(false);
+    setIsCartOpen(false);
+    
+    // Восстанавливаем прокрутку страницы
+    if (typeof document !== 'undefined') {
+      document.body.style.overflow = '';
+    }
+  }, []);
+
+  // Функция открытия оформления заказа
+  const openCheckout = useCallback(() => {
+    setIsCheckoutOpen(true);
+    setIsCartOpen(false); // Закрываем корзину при открытии оформления
+    
+    // Добавляем класс для блокировки прокрутки страницы
+    if (typeof document !== 'undefined') {
+      document.body.style.overflow = 'hidden';
+    }
+  }, []);
+
+  // Функция закрытия оформления заказа
+  const closeCheckout = useCallback(() => {
+    setIsCheckoutOpen(false);
+    
+    // Восстанавливаем прокрутку страницы
+    if (typeof document !== 'undefined') {
+      document.body.style.overflow = '';
+    }
   }, []);
 
   // Функция добавления товара в корзину
@@ -149,9 +188,12 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
   // Значение контекста
   const value = {
     cartItems,
-    isOpen,
+    isCartOpen,
+    isCheckoutOpen,
     openCart,
     closeCart,
+    openCheckout,
+    closeCheckout,
     addToCart,
     removeFromCart,
     updateQuantity,
