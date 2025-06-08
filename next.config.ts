@@ -7,6 +7,12 @@ const bundleAnalyzer = withBundleAnalyzer({
 });
 
 const nextConfig: NextConfig = {
+  // Базовый путь для GitHub Pages
+  basePath: process.env.NODE_ENV === 'production' ? '/template1' : '',
+  
+  // Настройка ассетов для GitHub Pages
+  assetPrefix: process.env.NODE_ENV === 'production' ? 'https://igorao79.github.io/template1' : '',
+  
   // Включаем оптимизацию изображений
   images: {
     formats: ['image/avif', 'image/webp'],
@@ -17,13 +23,11 @@ const nextConfig: NextConfig = {
         hostname: '**',
       },
     ],
+    unoptimized: process.env.NODE_ENV === 'production', // Для GitHub Pages
   },
   
   // Оптимизация для production
   productionBrowserSourceMaps: false, // Отключаем source maps в production для уменьшения размера бандла
-  
-  // Оптимизация для сборки
-  swcMinify: true, // Использовать SWC для минификации
   
   // Настройки компрессии
   compress: true,
@@ -63,6 +67,9 @@ const nextConfig: NextConfig = {
       },
     ];
   },
+  
+  // Настройка для экспорта статических файлов
+  output: 'export',
   
   // Оптимизация для webpack
   webpack: (config, { dev, isServer }) => {

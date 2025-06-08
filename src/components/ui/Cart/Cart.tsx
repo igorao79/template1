@@ -179,6 +179,7 @@ const Cart = () => {
       <Checkout 
         isOpen={isOpen && showCheckout} 
         onClose={handleCloseCheckout}
+        onBack={handleBackToCart}
       />
     </>
   );

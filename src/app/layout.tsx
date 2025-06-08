@@ -21,11 +21,14 @@ const playfair = Playfair_Display({
   display: 'swap',
 });
 
+// Определяем базовый путь для GitHub Pages
+const basePath = process.env.NODE_ENV === 'production' ? '/template1' : '';
+
 export const metadata: Metadata = {
   title: 'СырАрт - Премиальные сыры ручной работы',
   description: 'Откройте для себя коллекцию ремесленных сыров, созданных с любовью и мастерством',
   icons: {
-    icon: '/fav.ico',
+    icon: `${basePath}/fav.ico`,
   },
 };
 
@@ -43,7 +46,7 @@ export default function RootLayout({
     <html lang="ru" className={`${poppins.variable} ${playfair.variable}`}>
       <head>
         {/* Предзагрузка важных ресурсов */}
-        <link rel="preload" href="/images/loader.lottie" as="fetch" crossOrigin="anonymous" />
+        <link rel="preload" href={`${basePath}/images/loader.lottie`} as="fetch" crossOrigin="anonymous" />
       </head>
       <body suppressHydrationWarning={true}>
         <CartProvider>

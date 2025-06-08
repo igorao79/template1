@@ -2,6 +2,7 @@
   "name": "cheese",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://igorao79.github.io/template1",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -9,7 +10,10 @@
     "lint": "next lint",
     "analyze": "ANALYZE=true next build",
     "prod-build": "NODE_ENV=production next build",
-    "prod-start": "NODE_ENV=production next start"
+    "prod-start": "NODE_ENV=production next start",
+    "export": "next build && next export",
+    "predeploy": "npm run build && touch out/.nojekyll",
+    "deploy": "gh-pages -d out -t true"
   },
   "dependencies": {
     "@dotlottie/react-player": "^1.6.19",
@@ -35,6 +39,7 @@
     "@types/three": "^0.162.0",
     "eslint": "^8",
     "eslint-config-next": "15.3.3",
+    "gh-pages": "^6.3.0",
     "typescript": "^5"
   }
 }

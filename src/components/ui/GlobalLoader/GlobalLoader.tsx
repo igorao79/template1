@@ -4,6 +4,9 @@ import { useEffect, useState } from 'react';
 import { DotLottieReact } from '@lottiefiles/dotlottie-react';
 import styles from './GlobalLoader.module.scss';
 
+// Определяем базовый путь для GitHub Pages
+const basePath = process.env.NODE_ENV === 'production' ? '/template1' : '';
+
 const GlobalLoader = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [lottieError, setLottieError] = useState(false);
@@ -14,7 +17,7 @@ const GlobalLoader = () => {
   useEffect(() => {
     const preloadLottie = async () => {
       try {
-        const response = await fetch('/images/loader.lottie');
+        const response = await fetch(`${basePath}/images/loader.lottie`);
         if (!response.ok) throw new Error('Failed to load animation');
         const data = await response.blob(); // Получаем данные как blob
         const objectUrl = URL.createObjectURL(data);
@@ -81,7 +84,7 @@ const GlobalLoader = () => {
             )}
             <div style={{ opacity: isLottieReady ? 1 : 0, transition: 'opacity 0.3s' }}>
               <DotLottieReact
-                src={lottieData || "/images/loader.lottie"}
+                src={lottieData || `${basePath}/images/loader.lottie`}
                 autoplay
                 loop
                 onError={handleLottieError}

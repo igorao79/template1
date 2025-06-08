@@ -7,6 +7,9 @@ import { DotLottieReact } from '@lottiefiles/dotlottie-react';
 import { useCart, CartItem } from '@/context/CartContext';
 import styles from './Checkout.module.scss';
 
+// Определяем базовый путь для GitHub Pages
+const basePath = process.env.NODE_ENV === 'production' ? '/template1' : '';
+
 // Типы состояний для редьюсера
 type CheckoutState = {
   step: number;
@@ -218,7 +221,7 @@ const Checkout = ({ isOpen, onClose, onBack }: CheckoutProps) => {
                     </p>
                     <div className={styles.checkout__animation}>
                       <DotLottieReact
-                        src="/images/cheeseform.lottie"
+                        src={`${basePath}/images/cheeseform.lottie`}
                         autoplay
                         loop
                       />
