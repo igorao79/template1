@@ -71,7 +71,7 @@ export function CheeseGLB() {
     // Загружаем модель сыра
     const loader = new GLTFLoader();
     loader.load(
-      '/images/cheesemodel.glb',
+      './images/cheesemodel.glb',
       (gltf) => {
         scene.remove(tempMesh); // Удаляем временную модель
         

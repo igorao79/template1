@@ -11,9 +11,9 @@
     "analyze": "ANALYZE=true next build",
     "prod-build": "NODE_ENV=production next build",
     "prod-start": "NODE_ENV=production next start",
-    "export": "next build && next export",
-    "predeploy": "npm run build && touch out/.nojekyll",
-    "deploy": "gh-pages -d out -t true"
+    "export": "next build",
+    "predeploy": "npm run build && type nul > out/.nojekyll",
+    "deploy": "gh-pages -d out -t"
   },
   "dependencies": {
     "@dotlottie/react-player": "^1.6.19",

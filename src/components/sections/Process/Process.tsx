@@ -126,7 +126,7 @@ const Process = () => {
             <video 
               ref={videoRef}
               className={styles.process__video_player}
-              poster="/images/cheesecard/about.webp"
+              poster="./images/cheesecard/about.webp"
               preload="metadata"
               playsInline
               onEnded={handleVideoEnd}

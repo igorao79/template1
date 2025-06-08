@@ -98,7 +98,7 @@ const About = () => {
             transition={{ duration: 0.7 }}
           >
             <Image 
-              src="/images/cheesecard/about.webp" 
+              src="./images/cheesecard/about.webp" 
               alt="Процесс изготовления сыра" 
               width={600} 
               height={500}
