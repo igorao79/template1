@@ -17,7 +17,7 @@ const Contact = () => {
   });
   
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const { loaderHidden, registerIntersection } = useAnimation();
+  const { registerIntersection } = useAnimation();
   
   // Обработчик изменения видимости
   const handleInViewChange = useCallback((inView: boolean) => {
@@ -27,12 +27,12 @@ const Contact = () => {
   // Создаем ref для отслеживания видимости секции
   const { ref: sectionRef, inView } = useInView({
     threshold: 0.1, // Элемент считается видимым, когда 10% его видно
-    triggerOnce: true, // Анимация запускается только один раз
+    triggerOnce: false, // Анимация может запускаться многократно
     onChange: handleInViewChange, // Используем onChange вместо useEffect
   });
 
   // Определяем, нужно ли показывать анимацию
-  const shouldAnimate = loaderHidden && inView;
+  const shouldAnimate = inView;
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;

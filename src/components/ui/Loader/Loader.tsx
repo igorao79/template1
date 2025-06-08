@@ -27,7 +27,7 @@ const Loader = ({ isLoading }: LoaderProps) => {
     <AnimatePresence>
       {isVisible && (
         <motion.div 
-          className={styles.loader}
+          className={`${styles.loader} loader-container`}
           initial={{ opacity: 1 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}

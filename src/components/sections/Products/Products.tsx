@@ -38,7 +38,7 @@ const products = [
 
 const Products = () => {
   const { addToCart, openCart } = useCart();
-  const { loaderHidden, registerIntersection } = useAnimation();
+  const { registerIntersection } = useAnimation();
   
   // Обработчик изменения видимости
   const handleInViewChange = useCallback((inView: boolean) => {
@@ -48,12 +48,12 @@ const Products = () => {
   // Создаем ref для отслеживания видимости секции
   const { ref: sectionRef, inView } = useInView({
     threshold: 0.1, // Элемент считается видимым, когда 10% его видно
-    triggerOnce: true, // Анимация запускается только один раз
+    triggerOnce: false, // Анимация может запускаться многократно
     onChange: handleInViewChange, // Используем onChange вместо useEffect
   });
 
   // Определяем, нужно ли показывать анимацию
-  const shouldAnimate = loaderHidden && inView;
+  const shouldAnimate = inView;
 
   // Функция для добавления товара в корзину
   const handleAddToCart = (product: typeof products[0], e: React.MouseEvent) => {

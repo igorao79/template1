@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useCallback } from 'react';
+import { useState, useRef, useCallback, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { FaFlask, FaClock, FaCheck, FaWineBottle } from 'react-icons/fa';
 import { GiMilkCarton } from 'react-icons/gi';
@@ -8,37 +8,55 @@ import styles from './Process.module.scss';
 import { useAnimation } from '@/context/AnimationContext';
 import { useInView } from 'react-intersection-observer';
 
+// Определяем полные и сокращенные описания для разных размеров экрана
 const processSteps = [
   {
     id: 1,
     title: 'Отбор молока',
     description: 'Мы используем только свежее молоко высшего качества от местных фермеров, которые заботятся о своих животных.',
+    shortDescription: 'Свежее молоко высшего качества от местных фермеров.',
     icon: <GiMilkCarton size={48} />,
   },
   {
     id: 2,
     title: 'Ферментация',
     description: 'Добавление специальных культур и ферментов для запуска процесса створаживания молока.',
+    shortDescription: 'Добавление культур и ферментов для створаживания.',
     icon: <FaFlask size={32} />,
   },
   {
     id: 3,
     title: 'Созревание',
     description: 'Сыр выдерживается в специальных условиях для развития уникального вкуса и аромата.',
+    shortDescription: 'Выдержка для развития вкуса и аромата.',
     icon: <FaClock size={32} />,
   },
   {
     id: 4,
     title: 'Контроль качества',
     description: 'Каждая партия сыра проходит строгий контроль качества перед тем, как попасть к вам на стол.',
+    shortDescription: 'Строгий контроль перед отправкой к вам.',
     icon: <FaCheck size={32} />,
   },
 ];
 
 const Process = () => {
   const [isPlaying, setIsPlaying] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
-  const { loaderHidden, registerIntersection } = useAnimation();
+  const { registerIntersection } = useAnimation();
+  
+  // Определяем, мобильное ли устройство
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
   
   // Обработчик изменения видимости
   const handleInViewChange = useCallback((inView: boolean) => {
@@ -48,12 +66,12 @@ const Process = () => {
   // Создаем ref для отслеживания видимости секции
   const { ref: sectionRef, inView } = useInView({
     threshold: 0.1, // Элемент считается видимым, когда 10% его видно
-    triggerOnce: true, // Анимация запускается только один раз
+    triggerOnce: false, // Анимация может запускаться многократно
     onChange: handleInViewChange, // Используем onChange вместо useEffect
   });
 
   // Определяем, нужно ли показывать анимацию
-  const shouldAnimate = loaderHidden && inView;
+  const shouldAnimate = inView;
 
   const toggleVideo = () => {
     if (videoRef.current) {
@@ -91,7 +109,10 @@ const Process = () => {
         >
           <h2 className={styles.process__title}>Наш Процесс</h2>
           <p className={styles.process__subtitle}>
-            Узнайте, как мы создаем наши великолепные сыры, сочетая традиции и инновации
+            {isMobile 
+              ? 'Традиции и инновации в создании наших сыров' 
+              : 'Узнайте, как мы создаем наши великолепные сыры, сочетая традиции и инновации'
+            }
           </p>
         </motion.div>
 
@@ -110,7 +131,9 @@ const Process = () => {
               </div>
               <div className={styles.process__content}>
                 <h3 className={styles.process__step_title}>{step.title}</h3>
-                <p className={styles.process__description}>{step.description}</p>
+                <p className={styles.process__description}>
+                  {isMobile ? step.shortDescription : step.description}
+                </p>
               </div>
             </motion.div>
           ))}
@@ -146,7 +169,7 @@ const Process = () => {
             </button>
           </div>
           <p className={styles.process__video_caption}>
-            Посмотрите, как мы делаем наш фирменный сыр
+            {isMobile ? 'Процесс создания нашего сыра' : 'Посмотрите, как мы делаем наш фирменный сыр'}
           </p>
         </motion.div>
       </div>

@@ -5,9 +5,18 @@
   padding: $spacing-xxl 0;
   background-color: $background-color-light;
   
+  @include media-sm {
+    padding: $spacing-xl 0;
+  }
+  
   &__header {
     text-align: center;
     margin-bottom: $spacing-xl;
+    
+    @include media-sm {
+      margin-bottom: $spacing-lg;
+      padding: 0 $spacing-sm;
+    }
   }
   
   &__title {
@@ -18,6 +27,10 @@
     @include media-md {
       font-size: 2rem;
     }
+    
+    @include media-sm {
+      font-size: 1.8rem;
+    }
   }
   
   &__subtitle {
@@ -25,6 +38,10 @@
     color: $text-color-light;
     max-width: 600px;
     margin: 0 auto;
+    
+    @include media-sm {
+      font-size: 1rem;
+    }
   }
   
   &__container {
@@ -34,6 +51,11 @@
     
     @include media-lg {
       grid-template-columns: 1fr;
+    }
+    
+    @include media-sm {
+      gap: $spacing-md;
+      padding: 0 $spacing-sm;
     }
   }
   
@@ -46,10 +68,19 @@
     @include media-lg {
       margin-bottom: $spacing-lg;
     }
+    
+    @include media-sm {
+      padding: $spacing-md;
+      margin-bottom: $spacing-md;
+    }
   }
   
   &__info_list {
     margin-bottom: $spacing-lg;
+    
+    @include media-sm {
+      margin-bottom: $spacing-md;
+    }
   }
   
   &__info_item {
@@ -59,6 +90,10 @@
     
     &:last-child {
       margin-bottom: 0;
+    }
+    
+    @include media-sm {
+      margin-bottom: $spacing-sm;
     }
   }
   
@@ -73,37 +108,63 @@
     justify-content: center;
     margin-right: $spacing-sm;
     flex-shrink: 0;
+    
+    @include media-sm {
+      width: 35px;
+      height: 35px;
+    }
   }
   
   &__info_content {
     flex: 1;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+    word-break: break-word;
   }
   
   &__info_title {
     font-size: 1.1rem;
     margin-bottom: 5px;
     color: $text-color;
+    
+    @include media-sm {
+      font-size: 1rem;
+    }
   }
   
   &__info_text {
     color: $text-color-light;
+    
+    @include media-sm {
+      font-size: 0.9rem;
+    }
   }
   
   &__social {
     margin-top: $spacing-lg;
     padding-top: $spacing-md;
     border-top: 1px solid $border-color;
+    
+    @include media-sm {
+      margin-top: $spacing-md;
+      padding-top: $spacing-sm;
+    }
   }
   
   &__social_title {
     font-size: 1.1rem;
     margin-bottom: $spacing-sm;
     color: $text-color;
+    
+    @include media-sm {
+      font-size: 1rem;
+    }
   }
   
   &__social_links {
     display: flex;
     gap: $spacing-sm;
+    flex-wrap: wrap;
   }
   
   &__social_link {
@@ -122,6 +183,11 @@
       color: $white;
       transform: translateY(-3px);
     }
+    
+    @include media-sm {
+      width: 35px;
+      height: 35px;
+    }
   }
   
   &__form_container {
@@ -129,12 +195,20 @@
     border-radius: $border-radius;
     padding: $spacing-lg;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    
+    @include media-sm {
+      padding: $spacing-md;
+    }
   }
   
   &__form {
     display: flex;
     flex-direction: column;
     gap: $spacing-md;
+    
+    @include media-sm {
+      gap: $spacing-sm;
+    }
   }
   
   &__form_row {
@@ -144,6 +218,7 @@
     
     @include media-sm {
       grid-template-columns: 1fr;
+      gap: $spacing-sm;
     }
   }
   
@@ -166,6 +241,8 @@
     font-family: $font-family-base;
     font-size: 1rem;
     transition: border-color $transition-normal;
+    width: 100%;
+    box-sizing: border-box;
     
     &:focus {
       outline: none;
@@ -175,11 +252,20 @@
     &::placeholder {
       color: lighten($text-color-light, 20%);
     }
+    
+    @include media-sm {
+      padding: $spacing-xs $spacing-sm;
+      font-size: 0.9rem;
+    }
   }
   
   &__form_textarea {
     resize: vertical;
     min-height: 120px;
+    
+    @include media-sm {
+      min-height: 100px;
+    }
   }
   
   &__form_button {

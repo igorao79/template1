@@ -5,10 +5,19 @@
   padding: $spacing-xl 0;
   background-color: $background-color-light;
   
+  @include media-sm {
+    padding: $spacing-md 0 $spacing-lg;
+  }
+  
   &__header {
     text-align: center;
     max-width: 700px;
     margin: 0 auto $spacing-xl;
+    
+    @include media-sm {
+      margin: 0 auto $spacing-md;
+      padding: 0 $spacing-sm;
+    }
   }
   
   &__title {
@@ -18,18 +27,38 @@
     span {
       color: $primary-color;
     }
+    
+    @include media-sm {
+      font-size: 1.8rem;
+      margin-bottom: $spacing-xs;
+    }
   }
   
   &__subtitle {
     color: $text-color-light;
     font-size: 1.1rem;
     line-height: 1.6;
+    
+    @include media-sm {
+      font-size: 0.95rem;
+      line-height: 1.5;
+    }
   }
   
   &__timeline {
     max-width: 800px;
     margin: 0 auto $spacing-xl;
     position: relative;
+    padding: 0 $spacing-md;
+    
+    @include media-md {
+      padding: 0 $spacing-sm;
+    }
+    
+    @include media-sm {
+      margin: 0 auto $spacing-md;
+      padding: 0 $spacing-sm;
+    }
     
     &::before {
       content: '';
@@ -42,6 +71,10 @@
       
       @include media-md {
         left: 30px;
+      }
+      
+      @include media-sm {
+        left: 22px;
       }
     }
   }
@@ -76,8 +109,9 @@
     }
     
     @include media-sm {
-      margin-left: 10px;
+      margin-left: 5px;
       gap: $spacing-xs;
+      margin-bottom: $spacing-md;
     }
   }
   
@@ -102,9 +136,14 @@
     }
     
     @include media-sm {
-      width: 50px;
-      height: 50px;
+      width: 44px;
+      height: 44px;
       box-shadow: 0 0 0 3px rgba($primary-color, 0.1);
+      
+      svg {
+        width: 22px !important;
+        height: 22px !important;
+      }
     }
   }
   
@@ -122,6 +161,14 @@
     justify-content: center;
     font-weight: 700;
     font-size: 0.9rem;
+    
+    @include media-sm {
+      width: 20px;
+      height: 20px;
+      top: -5px;
+      right: -5px;
+      font-size: 0.75rem;
+    }
   }
   
   &__content {
@@ -137,6 +184,8 @@
     
     @include media-sm {
       padding: $spacing-xs $spacing-sm;
+      max-width: calc(100% - 50px); // Учитываем иконку и отступы
+      width: 100%;
     }
   }
   
@@ -145,8 +194,13 @@
     margin-bottom: $spacing-xs;
     color: $text-color;
     
+    @include media-md {
+      font-size: 1.3rem;
+    }
+    
     @include media-sm {
-      font-size: 1.2rem;
+      font-size: 1.1rem;
+      margin-bottom: 4px;
     }
   }
   
@@ -154,14 +208,24 @@
     color: $text-color-light;
     line-height: 1.6;
     
+    @include media-md {
+      font-size: 0.95rem;
+    }
+    
     @include media-sm {
-      font-size: 0.9rem;
+      font-size: 0.85rem;
+      line-height: 1.4;
     }
   }
   
   &__video {
     max-width: 800px;
     margin: 0 auto;
+    
+    @include media-sm {
+      padding: 0 $spacing-sm;
+      margin-top: $spacing-md;
+    }
   }
   
   &__video_container {
@@ -221,13 +285,24 @@
       pointer-events: none;
     }
     
-    @include media-sm {
-      width: 60px;
-      height: 60px;
+    @include media-md {
+      width: 70px;
+      height: 70px;
       
       svg {
-        width: 24px;
-        height: 24px;
+        width: 26px;
+        height: 26px;
+      }
+    }
+    
+    @include media-sm {
+      width: 50px;
+      height: 50px;
+      
+      svg {
+        width: 20px;
+        height: 20px;
+        margin-left: 3px;
       }
     }
   }
@@ -237,5 +312,11 @@
     margin-top: $spacing-md;
     color: $text-color-light;
     font-style: italic;
+    
+    @include media-sm {
+      margin-top: $spacing-sm;
+      padding: 0 $spacing-sm;
+      font-size: 0.9rem;
+    }
   }
 } 

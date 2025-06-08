@@ -10,7 +10,7 @@ import { useInView } from 'react-intersection-observer';
 
 const Hero = () => {
   const [mounted, setMounted] = useState(false);
-  const { loaderHidden, registerIntersection } = useAnimation();
+  const { registerIntersection } = useAnimation();
   
   // Обработчик изменения видимости
   const handleInViewChange = useCallback((inView: boolean) => {
@@ -20,12 +20,12 @@ const Hero = () => {
   // Создаем ref для отслеживания видимости секции
   const { ref: sectionRef, inView } = useInView({
     threshold: 0.1, // Элемент считается видимым, когда 10% его видно
-    triggerOnce: true, // Анимация запускается только один раз
+    triggerOnce: false, // Анимация может запускаться многократно
     onChange: handleInViewChange, // Используем onChange вместо useEffect
   });
 
   // Определяем, нужно ли показывать анимацию
-  const shouldAnimate = loaderHidden && inView;
+  const shouldAnimate = inView;
 
   useEffect(() => {
     setMounted(true);

@@ -21,6 +21,10 @@ const Header = () => {
     const initialScroll = window.scrollY > 50;
     setIsScrolled(initialScroll);
     
+    // Проверяем хеш в URL при загрузке
+    const initialHash = window.location.hash.replace('#', '') || 'home';
+    setActiveSection(initialHash);
+    
     // Определяем активный раздел на основе начальной позиции скролла
     const updateActiveSection = () => {
       const sections = document.querySelectorAll('section[id]');
@@ -46,7 +50,7 @@ const Header = () => {
     };
     
     // Вызываем функцию определения активного раздела сразу после загрузки
-    updateActiveSection();
+    setTimeout(updateActiveSection, 200);
 
     const handleScroll = () => {
       // Обновляем состояние скролла
@@ -65,11 +69,13 @@ const Header = () => {
     if (typeof window !== 'undefined') {
       const hash = window.location.hash.replace('#', '');
       if (hash) {
-        const targetElement = document.getElementById(hash);
-        if (targetElement) {
-          targetElement.scrollIntoView({ behavior: 'smooth' });
-          setActiveSection(hash);
-        }
+        setTimeout(() => {
+          const targetElement = document.getElementById(hash);
+          if (targetElement) {
+            targetElement.scrollIntoView({ behavior: 'smooth' });
+            setActiveSection(hash);
+          }
+        }, 500); // Задержка для корректной работы после загрузки страницы
       }
     }
   }, []);
@@ -88,6 +94,11 @@ const Header = () => {
       const targetElement = document.getElementById(targetId);
       if (targetElement) {
         window.history.pushState(null, '', `#${targetId}`);
+        
+        // Сохраняем хеш в sessionStorage для восстановления при перезагрузке
+        sessionStorage.setItem('lastHash', `#${targetId}`);
+        
+        // Плавная прокрутка к элементу
         targetElement.scrollIntoView({ behavior: 'smooth' });
         setActiveSection(targetId);
       }

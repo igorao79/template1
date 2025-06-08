@@ -7,6 +7,7 @@
   --text-color: #333533;
   --accent-color: #E8871E;
   --white: #FFFFFF;
+  --background-color-light: #F9F9F9;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -16,19 +17,47 @@
   }
 }
 
-html,
-body {
+/* Базовые стили для HTML и скролла */
+html {
   max-width: 100vw;
   overflow-x: hidden;
   scroll-behavior: smooth;
+  overflow-y: scroll;
+  background-color: var(--background-color-light); /* Фиксированный цвет фона */
+}
+
+/* Стили для скрытия скролла во время загрузки */
+html.loading::-webkit-scrollbar {
+  display: none; /* Скрываем скролл в Chrome и Safari во время загрузки */
+}
+
+html.loading {
+  scrollbar-width: none; /* Скрываем скролл в Firefox во время загрузки */
 }
 
 body {
   color: var(--text-color);
-  background: var(--secondary-color);
+  background: var(--background-color-light); /* Фиксированный цвет фона */
   font-family: 'Poppins', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  transition: opacity 0.3s ease;
+  margin: 0;
+  padding: 0;
+}
+
+/* Скрываем весь контент, кроме лоадера, при загрузке */
+body.loading main,
+body.loading header,
+body.loading footer {
+  opacity: 0;
+}
+
+/* Специальные стили для отображения лоадера сразу */
+body.loading .loader-container {
+  opacity: 1 !important;
+  z-index: 9999 !important;
+  visibility: visible !important;
 }
 
 * {
