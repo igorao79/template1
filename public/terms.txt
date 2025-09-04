@@ -1,0 +1,2 @@
+# Terms of Service Meta File
+# Generated for Next.js static export

@@ -1,0 +1,2 @@
+# Privacy Policy Meta File
+# Generated for Next.js static export
