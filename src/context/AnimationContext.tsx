@@ -6,6 +6,8 @@ interface AnimationContextType {
   loaderHidden: boolean;
   sectionsInView: Record<string, boolean>;
   registerIntersection: (sectionId: string, inView: boolean) => void;
+  showLoader: () => void;
+  hideLoader: () => void;
 }
 
 const AnimationContext = createContext<AnimationContextType | undefined>(undefined);
@@ -32,12 +34,23 @@ export const AnimationProvider = ({ children }: { children: ReactNode }) => {
     }));
   };
 
+  // Функции для ручного управления лоадером
+  const showLoader = () => {
+    setLoaderHidden(false);
+  };
+
+  const hideLoader = () => {
+    setLoaderHidden(true);
+  };
+
   return (
-    <AnimationContext.Provider 
-      value={{ 
-        loaderHidden, 
+    <AnimationContext.Provider
+      value={{
+        loaderHidden,
         sectionsInView,
-        registerIntersection
+        registerIntersection,
+        showLoader,
+        hideLoader
       }}
     >
       {children}

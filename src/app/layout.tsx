@@ -7,6 +7,7 @@ import { AnimationProvider } from '@/context/AnimationContext';
 import Cart from '@/components/ui/Cart';
 import Checkout from '@/components/ui/Checkout';
 import ClientLoader from '@/components/ui/ClientLoader';
+import PageLoaderManager from '@/components/ui/PageLoaderManager';
 import './globals.css';
 
 const poppins = Poppins({
@@ -48,6 +49,7 @@ export const viewport = {
 // 'auto' вместо 'manual', чтобы браузер автоматически восстанавливал позицию
 export const scrollRestoration = 'auto';
 
+
 export default function RootLayout({
   children,
 }: {
@@ -72,7 +74,7 @@ export default function RootLayout({
             <ClientLoader />
             <Header />
             <main>
-              {children}
+              <PageLoaderManager>{children}</PageLoaderManager>
             </main>
             <Footer />
             <Cart />

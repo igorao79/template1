@@ -1,9 +1,18 @@
+"use client";
+
 import Link from 'next/link';
 import { FaCheese, FaFacebook, FaInstagram, FaTwitter, FaPinterest } from 'react-icons/fa';
+import { useAnimation } from '@/context/AnimationContext';
 import styles from './Footer.module.scss';
 
 const Footer = () => {
   const currentYear = new Date().getFullYear();
+  const { showLoader } = useAnimation();
+
+  // Обработчик клика по ссылкам политик
+  const handlePolicyClick = () => {
+    showLoader();
+  };
   
   const socialLinks = [
     { 
@@ -146,9 +155,9 @@ const Footer = () => {
           </p>
 
           <div className={styles.footer__links}>
-            <Link href="/privacy" className={styles.footer__link}>Условия использования</Link>
-            <Link href="/terms" className={styles.footer__link}>Политика конфиденциальности</Link>
-            <Link href="/cookies" className={styles.footer__link}>Карта сайта</Link>
+            <Link href="/privacy" className={styles.footer__link} onClick={handlePolicyClick}>Условия использования</Link>
+            <Link href="/terms" className={styles.footer__link} onClick={handlePolicyClick}>Политика конфиденциальности</Link>
+            <Link href="/cookies" className={styles.footer__link} onClick={handlePolicyClick}>Карта сайта</Link>
           </div>
         </div>
       </div>

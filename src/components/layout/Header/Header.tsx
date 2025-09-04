@@ -17,93 +17,123 @@ const Header = () => {
   const router = useRouter();
 
   useEffect(() => {
-    // Проверяем начальное положение скролла при загрузке страницы
+    // Проверяем начальное положение скролла при загрузке страницы (работает на всех страницах)
     const initialScroll = window.scrollY > 50;
     setIsScrolled(initialScroll);
-    
-    // Проверяем хеш в URL при загрузке
-    const initialHash = window.location.hash.replace('#', '') || 'home';
-    setActiveSection(initialHash);
-    
-    // Определяем активный раздел на основе начальной позиции скролла
-    const updateActiveSection = () => {
-      const sections = document.querySelectorAll('section[id]');
-      let currentSection = 'home';
-      
-      sections.forEach(section => {
-        const sectionTop = section.getBoundingClientRect().top;
-        const sectionId = section.getAttribute('id');
-        
-        if (sectionTop <= 100 && sectionId) {
-          currentSection = sectionId;
-        }
-      });
-      
-      setActiveSection(currentSection);
-      
-      // Обновляем URL с якорем текущего раздела, если он отличается от текущего
-      if (currentSection !== 'home' && window.location.hash !== `#${currentSection}`) {
-        window.history.replaceState(null, '', `#${currentSection}`);
-      } else if (currentSection === 'home' && window.location.hash !== '') {
-        window.history.replaceState(null, '', window.location.pathname);
-      }
-    };
-    
-    // Вызываем функцию определения активного раздела сразу после загрузки
-    setTimeout(updateActiveSection, 200);
 
+    // Логика определения разделов только для главной страницы
+    if (pathname === '/') {
+      // Проверяем хеш в URL при загрузке
+      const initialHash = window.location.hash.replace('#', '') || 'home';
+      setActiveSection(initialHash);
+
+      // Определяем активный раздел на основе начальной позиции скролла
+      const updateActiveSection = () => {
+        const sections = document.querySelectorAll('section[id]');
+        let currentSection = 'home';
+
+        sections.forEach(section => {
+          const sectionTop = section.getBoundingClientRect().top;
+          const sectionId = section.getAttribute('id');
+
+          if (sectionTop <= 100 && sectionId) {
+            currentSection = sectionId;
+          }
+        });
+
+        setActiveSection(currentSection);
+
+        // Обновляем URL с якорем текущего раздела, если он отличается от текущего
+        if (currentSection !== 'home' && window.location.hash !== `#${currentSection}`) {
+          window.history.replaceState(null, '', `#${currentSection}`);
+        } else if (currentSection === 'home' && window.location.hash !== '') {
+          window.history.replaceState(null, '', window.location.pathname);
+        }
+      };
+
+      // Вызываем функцию определения активного раздела сразу после загрузки
+      setTimeout(updateActiveSection, 200);
+    } else {
+      // На других страницах сбрасываем активный раздел
+      setActiveSection('');
+    }
+
+    // Логика скроллинга работает на всех страницах
     const handleScroll = () => {
       // Обновляем состояние скролла
       setIsScrolled(window.scrollY > 50);
-      
-      // Определяем активный раздел на основе позиции скролла
-      updateActiveSection();
+
+      // Определяем активный раздел только на главной странице
+      if (pathname === '/') {
+        const sections = document.querySelectorAll('section[id]');
+        let currentSection = 'home';
+
+        sections.forEach(section => {
+          const sectionTop = section.getBoundingClientRect().top;
+          const sectionId = section.getAttribute('id');
+
+          if (sectionTop <= 100 && sectionId) {
+            currentSection = sectionId;
+          }
+        });
+
+        setActiveSection(currentSection);
+      }
     };
 
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  }, [pathname]);
 
   // Проверяем хеш в URL при загрузке страницы
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      const hash = window.location.hash.replace('#', '');
-      if (hash) {
-        setTimeout(() => {
-          const targetElement = document.getElementById(hash);
-          if (targetElement) {
-            targetElement.scrollIntoView({ behavior: 'smooth' });
-            setActiveSection(hash);
-          }
-        }, 500); // Задержка для корректной работы после загрузки страницы
-      }
+    // Только на главной странице работаем с хешами
+    if (pathname !== '/' || typeof window === 'undefined') {
+      return;
     }
-  }, []);
+
+    const hash = window.location.hash.replace('#', '');
+    if (hash) {
+      setTimeout(() => {
+        const targetElement = document.getElementById(hash);
+        if (targetElement) {
+          targetElement.scrollIntoView({ behavior: 'smooth' });
+          setActiveSection(hash);
+        }
+      }, 500); // Задержка для корректной работы после загрузки страницы
+    }
+  }, [pathname]);
 
   const handleNavLinkClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
     e.preventDefault();
     const targetId = href.replace('#', '');
-    
-    // Если цель - home, обновляем URL без хеша
-    if (targetId === 'home' || targetId === '') {
-      window.history.pushState(null, '', window.location.pathname);
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-      setActiveSection('home');
+
+    // Если мы не на главной странице, переходим на главную с нужным якорем
+    if (pathname !== '/') {
+      const targetUrl = targetId === 'home' || targetId === '' ? '/' : `/#${targetId}`;
+      router.push(targetUrl);
     } else {
-      // Иначе скроллим к нужному разделу и обновляем URL с хешем
-      const targetElement = document.getElementById(targetId);
-      if (targetElement) {
-        window.history.pushState(null, '', `#${targetId}`);
-        
-        // Сохраняем хеш в sessionStorage для восстановления при перезагрузке
-        sessionStorage.setItem('lastHash', `#${targetId}`);
-        
-        // Плавная прокрутка к элементу
-        targetElement.scrollIntoView({ behavior: 'smooth' });
-        setActiveSection(targetId);
+      // Если мы на главной странице, работаем как обычно
+      if (targetId === 'home' || targetId === '') {
+        window.history.pushState(null, '', window.location.pathname);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        setActiveSection('home');
+      } else {
+        // Иначе скроллим к нужному разделу и обновляем URL с хешем
+        const targetElement = document.getElementById(targetId);
+        if (targetElement) {
+          window.history.pushState(null, '', `#${targetId}`);
+
+          // Сохраняем хеш в sessionStorage для восстановления при перезагрузке
+          sessionStorage.setItem('lastHash', `#${targetId}`);
+
+          // Плавная прокрутка к элементу
+          targetElement.scrollIntoView({ behavior: 'smooth' });
+          setActiveSection(targetId);
+        }
       }
     }
-    
+
     // Закрываем мобильное меню если оно открыто
     if (isMobileMenuOpen) {
       setIsMobileMenuOpen(false);
@@ -115,7 +145,12 @@ const Header = () => {
   };
 
   const isActive = (sectionId: string) => {
-    return activeSection === sectionId;
+    // На главной странице проверяем активный раздел
+    if (pathname === '/') {
+      return activeSection === sectionId;
+    }
+    // На других страницах ничего не активно
+    return false;
   };
 
   const navLinks = [
