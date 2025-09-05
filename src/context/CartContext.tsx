@@ -57,12 +57,18 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
   // Загружаем корзину из localStorage при инициализации
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      const savedCart = localStorage.getItem('cart');
-      if (savedCart) {
-        try {
+      try {
+        const savedCart = localStorage.getItem('cart');
+        if (savedCart) {
           setCartItems(JSON.parse(savedCart));
-        } catch (error) {
-          console.error('Ошибка при загрузке корзины из localStorage:', error);
+        }
+      } catch (error) {
+        console.error('Ошибка при загрузке корзины из localStorage:', error);
+        // Очищаем поврежденные данные
+        try {
+          localStorage.removeItem('cart');
+        } catch (e) {
+          console.error('Не удалось очистить localStorage:', e);
         }
       }
     }
@@ -71,7 +77,11 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
   // Сохраняем корзину в localStorage при изменении
   useEffect(() => {
     if (typeof window !== 'undefined') {
-      localStorage.setItem('cart', JSON.stringify(cartItems));
+      try {
+        localStorage.setItem('cart', JSON.stringify(cartItems));
+      } catch (error) {
+        console.error('Ошибка при сохранении корзины в localStorage:', error);
+      }
     }
   }, [cartItems]);
 
@@ -176,7 +186,13 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
   // Функция очистки корзины
   const clearCart = useCallback(() => {
     setCartItems([]);
-    localStorage.removeItem('cart');
+    try {
+      if (typeof window !== 'undefined') {
+        localStorage.removeItem('cart');
+      }
+    } catch (error) {
+      console.error('Ошибка при очистке корзины в localStorage:', error);
+    }
   }, []);
 
   // Вычисляем общее количество товаров

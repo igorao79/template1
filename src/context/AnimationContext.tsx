@@ -18,10 +18,18 @@ export const AnimationProvider = ({ children }: { children: ReactNode }) => {
 
   // Скрываем лоадер после загрузки страницы
   useEffect(() => {
-    // Сокращаем время ожидания для лоадера
+    // Проверяем, не был ли лоадер уже скрыт ранее
+    const wasLoaderHidden = typeof window !== 'undefined' && window.loaderHidden;
+
+    if (wasLoaderHidden) {
+      setLoaderHidden(true);
+      return;
+    }
+
+    // Увеличиваем время ожидания для надежности
     const timer = setTimeout(() => {
       setLoaderHidden(true);
-    }, 1500); // Уменьшаем время до 1.5 секунд для лучшего UX
+    }, 2000); // Увеличиваем до 2 секунд
 
     return () => clearTimeout(timer);
   }, []);

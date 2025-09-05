@@ -174,20 +174,34 @@ export default function RootLayout({
                 handlePageLoad();
               });
               
-              // Если лоадер не появится через 3 секунды, все равно показываем контент
+              // Fallback: если лоадер не появится через 4 секунды, показываем контент
               setTimeout(function() {
-                if (!window.loaderHidden) {
-                  // Плавно показываем контент
-                  document.querySelectorAll('main, header, footer').forEach(function(el) {
-                    el.style.transition = 'opacity 0.5s ease';
-                    el.style.opacity = '1';
-                  });
-                  
-                  // Снимаем классы загрузки
-                  bodyElement.classList.remove('loading');
-                  htmlElement.classList.remove('loading');
+                try {
+                  if (!window.loaderHidden) {
+                    console.warn('Fallback: лоадер не был скрыт вовремя');
+                    // Плавно показываем контент
+                    document.querySelectorAll('main, header, footer').forEach(function(el) {
+                      if (el) {
+                        el.style.transition = 'opacity 0.5s ease';
+                        el.style.opacity = '1';
+                      }
+                    });
+
+                    // Снимаем классы загрузки
+                    bodyElement.classList.remove('loading');
+                    htmlElement.classList.remove('loading');
+                  }
+                } catch (e) {
+                  console.error('Ошибка в fallback таймере:', e);
+                  // Emergency fallback
+                  try {
+                    bodyElement.classList.remove('loading');
+                    htmlElement.classList.remove('loading');
+                  } catch (e2) {
+                    console.error('Emergency fallback failed:', e2);
+                  }
                 }
-              }, 3000);
+              }, 4000);
             })();
           `
         }} />
