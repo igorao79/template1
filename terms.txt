@@ -1,2 +1,146 @@
-# Terms of Service Meta File
-# Generated for Next.js static export
+1:"$Sreact.fragment"
+2:I[8088,["869","static/chunks/styles-7f9e44c2e8e4988f.js","429","static/chunks/f58c171e-07e44676bacbe070.js","711","static/chunks/8e1d74a4-37f511e7ff51ec72.js","59","static/chunks/59-6976280acf07e9f5.js","433","static/chunks/433-8ae2c486149a83a5.js","177","static/chunks/app/layout-c3ccff08159876e4.js"],"CartProvider"]
+3:I[778,["869","static/chunks/styles-7f9e44c2e8e4988f.js","429","static/chunks/f58c171e-07e44676bacbe070.js","711","static/chunks/8e1d74a4-37f511e7ff51ec72.js","59","static/chunks/59-6976280acf07e9f5.js","433","static/chunks/433-8ae2c486149a83a5.js","177","static/chunks/app/layout-c3ccff08159876e4.js"],"AnimationProvider"]
+4:I[6961,["869","static/chunks/styles-7f9e44c2e8e4988f.js","429","static/chunks/f58c171e-07e44676bacbe070.js","711","static/chunks/8e1d74a4-37f511e7ff51ec72.js","59","static/chunks/59-6976280acf07e9f5.js","433","static/chunks/433-8ae2c486149a83a5.js","177","static/chunks/app/layout-c3ccff08159876e4.js"],"default"]
+5:I[8066,["869","static/chunks/styles-7f9e44c2e8e4988f.js","429","static/chunks/f58c171e-07e44676bacbe070.js","711","static/chunks/8e1d74a4-37f511e7ff51ec72.js","59","static/chunks/59-6976280acf07e9f5.js","433","static/chunks/433-8ae2c486149a83a5.js","177","static/chunks/app/layout-c3ccff08159876e4.js"],"default"]
+6:I[8038,["869","static/chunks/styles-7f9e44c2e8e4988f.js","429","static/chunks/f58c171e-07e44676bacbe070.js","711","static/chunks/8e1d74a4-37f511e7ff51ec72.js","59","static/chunks/59-6976280acf07e9f5.js","433","static/chunks/433-8ae2c486149a83a5.js","177","static/chunks/app/layout-c3ccff08159876e4.js"],"default"]
+7:I[7555,[],""]
+8:I[1295,[],""]
+9:I[9543,["869","static/chunks/styles-7f9e44c2e8e4988f.js","429","static/chunks/f58c171e-07e44676bacbe070.js","59","static/chunks/59-6976280acf07e9f5.js","345","static/chunks/app/not-found-4278db3278b0c4b4.js"],"default"]
+a:I[8402,["869","static/chunks/styles-7f9e44c2e8e4988f.js","429","static/chunks/f58c171e-07e44676bacbe070.js","711","static/chunks/8e1d74a4-37f511e7ff51ec72.js","59","static/chunks/59-6976280acf07e9f5.js","433","static/chunks/433-8ae2c486149a83a5.js","177","static/chunks/app/layout-c3ccff08159876e4.js"],"default"]
+b:I[1128,["869","static/chunks/styles-7f9e44c2e8e4988f.js","429","static/chunks/f58c171e-07e44676bacbe070.js","711","static/chunks/8e1d74a4-37f511e7ff51ec72.js","59","static/chunks/59-6976280acf07e9f5.js","433","static/chunks/433-8ae2c486149a83a5.js","177","static/chunks/app/layout-c3ccff08159876e4.js"],"default"]
+c:I[4128,["869","static/chunks/styles-7f9e44c2e8e4988f.js","429","static/chunks/f58c171e-07e44676bacbe070.js","711","static/chunks/8e1d74a4-37f511e7ff51ec72.js","59","static/chunks/59-6976280acf07e9f5.js","433","static/chunks/433-8ae2c486149a83a5.js","177","static/chunks/app/layout-c3ccff08159876e4.js"],"default"]
+e:I[9665,[],"MetadataBoundary"]
+10:I[9665,[],"OutletBoundary"]
+13:I[4911,[],"AsyncMetadataOutlet"]
+15:I[9665,[],"ViewportBoundary"]
+17:I[6614,[],""]
+:HL["https://igorao79.github.io/template1/_next/static/css/2efc28581edd1f8a.css","style"]
+d:T190c,
+            (function() {
+              // Получаем элементы HTML и Body
+              var htmlElement = document.documentElement;
+              var bodyElement = document.body;
+              
+              // Предварительно сохраняем позицию скролла перед перезагрузкой
+              window.addEventListener('beforeunload', function() {
+                sessionStorage.setItem('lastHash', window.location.hash);
+                sessionStorage.setItem('scrollPosition', window.scrollY.toString());
+              });
+              
+              // Обработка хэша и позиции скролла
+              function handlePageLoad() {
+                var lastHash = sessionStorage.getItem('lastHash');
+                var scrollPosition = sessionStorage.getItem('scrollPosition');
+                
+                // Если есть хэш в URL, используем его
+                if (window.location.hash) {
+                  // Скроллим к элементу по хэшу с небольшой задержкой
+                  setTimeout(function() {
+                    var targetElement = document.getElementById(window.location.hash.substring(1));
+                    if (targetElement) {
+                      // Сначала позиционируем без анимации
+                      window.scrollTo(0, targetElement.offsetTop - 80);
+                    }
+                    
+                    // Затем плавно снимаем классы загрузки
+                    setTimeout(function() {
+                      // Плавно показываем контент
+                      document.querySelectorAll('main, header, footer').forEach(function(el) {
+                        el.style.transition = 'opacity 0.5s ease';
+                        el.style.opacity = '1';
+                      });
+                      
+                      // Снимаем классы загрузки через небольшую задержку
+                      setTimeout(function() {
+                        bodyElement.classList.remove('loading');
+                        htmlElement.classList.remove('loading');
+                      }, 300);
+                    }, 100);
+                  }, 0);
+                }
+                // Если нет хэша, но есть сохраненный хэш, восстанавливаем его
+                else if (lastHash && lastHash !== '#') {
+                  window.location.hash = lastHash;
+                  // Обработка будет продолжена в следующем условии после установки хэша
+                }
+                // Если нет хэша, восстанавливаем позицию скролла
+                else if (scrollPosition) {
+                  // Восстанавливаем позицию без анимации
+                  window.scrollTo(0, parseInt(scrollPosition));
+                  
+                  // Плавно снимаем классы загрузки
+                  setTimeout(function() {
+                    // Плавно показываем контент
+                    document.querySelectorAll('main, header, footer').forEach(function(el) {
+                      el.style.transition = 'opacity 0.5s ease';
+                      el.style.opacity = '1';
+                    });
+                    
+                    // Снимаем классы загрузки через небольшую задержку
+                    setTimeout(function() {
+                      bodyElement.classList.remove('loading');
+                      htmlElement.classList.remove('loading');
+                    }, 300);
+                  }, 100);
+                } else {
+                  // Если нет данных, просто плавно снимаем классы загрузки
+                  setTimeout(function() {
+                    // Плавно показываем контент
+                    document.querySelectorAll('main, header, footer').forEach(function(el) {
+                      el.style.transition = 'opacity 0.5s ease';
+                      el.style.opacity = '1';
+                    });
+                    
+                    // Снимаем классы загрузки через небольшую задержку
+                    setTimeout(function() {
+                      bodyElement.classList.remove('loading');
+                      htmlElement.classList.remove('loading');
+                    }, 300);
+                  }, 100);
+                }
+              }
+              
+              // Связываем с завершением загрузки лоадера
+              window.addEventListener('loaderHidden', function() {
+                handlePageLoad();
+              });
+              
+              // Fallback: если лоадер не появится через 4 секунды, показываем контент
+              setTimeout(function() {
+                try {
+                  if (!window.loaderHidden) {
+                    console.warn('Fallback: лоадер не был скрыт вовремя');
+                    // Плавно показываем контент
+                    document.querySelectorAll('main, header, footer').forEach(function(el) {
+                      if (el) {
+                        el.style.transition = 'opacity 0.5s ease';
+                        el.style.opacity = '1';
+                      }
+                    });
+
+                    // Снимаем классы загрузки
+                    bodyElement.classList.remove('loading');
+                    htmlElement.classList.remove('loading');
+                  }
+                } catch (e) {
+                  console.error('Ошибка в fallback таймере:', e);
+                  // Emergency fallback
+                  try {
+                    bodyElement.classList.remove('loading');
+                    htmlElement.classList.remove('loading');
+                  } catch (e2) {
+                    console.error('Emergency fallback failed:', e2);
+                  }
+                }
+              }, 4000);
+            })();
+          0:{"P":null,"b":"Y9yTCKKTexQSl16JSsOGu","p":"https://igorao79.github.io/template1","c":["","terms"],"i":false,"f":[[["",{"children":["terms",{"children":["__PAGE__",{}]}]},"$undefined","$undefined",true],["",["$","$1","c",{"children":[[["$","link","0",{"rel":"stylesheet","href":"https://igorao79.github.io/template1/_next/static/css/2efc28581edd1f8a.css","precedence":"next","crossOrigin":"$undefined","nonce":"$undefined"}]],["$","html",null,{"lang":"ru","className":"__variable_b408fc __variable_58cbf6 loading","style":{"scrollBehavior":"smooth"},"children":[["$","head",null,{"children":[["$","link",null,{"rel":"preload","href":"/template1/images/loader.lottie","as":"fetch","crossOrigin":"anonymous"}],["$","style",null,{"dangerouslySetInnerHTML":{"__html":"\n          html, body {\n            background-color: #F9F9F9 !important;\n          }\n        "}}]]}],["$","body",null,{"suppressHydrationWarning":true,"id":"top","className":"loading","children":[["$","$L2",null,{"children":["$","$L3",null,{"children":[["$","$L4",null,{}],["$","$L5",null,{}],["$","main",null,{"children":["$","$L6",null,{"children":["$","$L7",null,{"parallelRouterKey":"children","error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L8",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":[["$","$L9",null,{}],[]],"forbidden":"$undefined","unauthorized":"$undefined"}]}]}],["$","$La",null,{}],["$","$Lb",null,{}],["$","$Lc",null,{}]]}]}],["$","script",null,{"dangerouslySetInnerHTML":{"__html":"$d"}}]]}]]}]]}],{"children":["terms",["$","$1","c",{"children":[null,["$","$L7",null,{"parallelRouterKey":"children","error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L8",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":"$undefined","forbidden":"$undefined","unauthorized":"$undefined"}]]}],{"children":["__PAGE__",["$","$1","c",{"children":[["$","main",null,{"style":{"padding":"120px 0 60px"},"children":["$","div",null,{"className":"container","children":["$","div",null,{"style":{"maxWidth":"800px","margin":"0 auto"},"children":[["$","h1",null,{"style":{"fontSize":"2.5rem","fontWeight":"700","marginBottom":"2rem","color":"#333","textAlign":"center"},"children":"Политика конфиденциальности"}],["$","div",null,{"style":{"lineHeight":"1.7","fontSize":"1.1rem","color":"#666"},"children":[["$","h2",null,{"style":{"fontSize":"1.8rem","fontWeight":"600","margin":"2rem 0 1rem","color":"#333"},"children":"1. Общие положения"}],["$","p",null,{"style":{"marginBottom":"1.5rem"},"children":"Настоящая политика конфиденциальности описывает, как мы собираем, используем и защищаем вашу личную информацию при использовании нашего сайта и услуг."}],["$","h2",null,{"style":{"fontSize":"1.8rem","fontWeight":"600","margin":"2rem 0 1rem","color":"#333"},"children":"2. Собираемая информация"}],["$","p",null,{"style":{"marginBottom":"1rem"},"children":"Мы можем собирать следующие типы информации:"}],["$","ul",null,{"style":{"marginBottom":"1.5rem","paddingLeft":"2rem"},"children":[["$","li",null,{"children":"Личная информация: имя, email, телефон, адрес доставки"}],["$","li",null,{"children":"Информация о заказах: история покупок, предпочтения"}],["$","li",null,{"children":"Техническая информация: IP-адрес, тип браузера, cookies"}]]}],["$","h2",null,{"style":{"fontSize":"1.8rem","fontWeight":"600","margin":"2rem 0 1rem","color":"#333"},"children":"3. Использование информации"}],["$","p",null,{"style":{"marginBottom":"1rem"},"children":"Собранная информация используется для:"}],["$","ul",null,{"style":{"marginBottom":"1.5rem","paddingLeft":"2rem"},"children":[["$","li",null,{"children":"Обработки заказов и доставки"}],["$","li",null,{"children":"Улучшения качества обслуживания"}],["$","li",null,{"children":"Отправки информационных рассылок (с вашего согласия)"}],["$","li",null,{"children":"Анализа посещаемости сайта"}]]}],["$","h2",null,{"style":{"fontSize":"1.8rem","fontWeight":"600","margin":"2rem 0 1rem","color":"#333"},"children":"4. Cookies"}],["$","p",null,{"style":{"marginBottom":"1.5rem"},"children":"Мы используем cookies для улучшения работы сайта и анализа трафика. Вы можете отключить cookies в настройках вашего браузера."}],["$","h2",null,{"style":{"fontSize":"1.8rem","fontWeight":"600","margin":"2rem 0 1rem","color":"#333"},"children":"5. Защита данных"}],["$","p",null,{"style":{"marginBottom":"1.5rem"},"children":"Мы принимаем все необходимые меры для защиты вашей личной информации от несанкционированного доступа, изменения, раскрытия или уничтожения."}],["$","h2",null,{"style":{"fontSize":"1.8rem","fontWeight":"600","margin":"2rem 0 1rem","color":"#333"},"children":"6. Ваши права"}],["$","p",null,{"style":{"marginBottom":"1rem"},"children":"Вы имеете право:"}],["$","ul",null,{"style":{"marginBottom":"1.5rem","paddingLeft":"2rem"},"children":[["$","li",null,{"children":"Получить доступ к своей личной информации"}],["$","li",null,{"children":"Исправить неточные данные"}],["$","li",null,{"children":"Удалить свою информацию"}],["$","li",null,{"children":"Отказаться от рассылок"}]]}],["$","h2",null,{"style":{"fontSize":"1.8rem","fontWeight":"600","margin":"2rem 0 1rem","color":"#333"},"children":"7. Контакты"}],["$","p",null,{"style":{"marginBottom":"1.5rem"},"children":"Если у вас есть вопросы по поводу нашей политики конфиденциальности, свяжитесь с нами по email: info@syrart.ru"}]]}]]}]}]}],["$","$Le",null,{"children":"$Lf"}],null,["$","$L10",null,{"children":["$L11","$L12",["$","$L13",null,{"promise":"$@14"}]]}]]}],{},null,false]},null,false]},null,false],["$","$1","h",{"children":[null,["$","$1","o_kHVyOuZkcR83gBLKeZf",{"children":[["$","$L15",null,{"children":"$L16"}],null]}],null]}],false]],"m":"$undefined","G":["$17","$undefined"],"s":false,"S":true}
+18:"$Sreact.suspense"
+19:I[4911,[],"AsyncMetadata"]
+f:["$","$18",null,{"fallback":null,"children":["$","$L19",null,{"promise":"$@1a"}]}]
+12:null
+16:[["$","meta","0",{"charSet":"utf-8"}],["$","meta","1",{"name":"viewport","content":"width=device-width, initial-scale=1"}],["$","meta","2",{"name":"theme-color","content":"#F5CB5C"}]]
+11:null
+1a:{"metadata":[["$","title","0",{"children":"Политика конфиденциальности - Cheese Shop"}],["$","meta","1",{"name":"description","content":"Политика конфиденциальности нашего магазина сыра."}],["$","link","2",{"rel":"icon","href":"/template1/fav.ico"}]],"error":null,"digest":"$undefined"}
+14:{"metadata":"$1a:metadata","error":null,"digest":"$undefined"}
